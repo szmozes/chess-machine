@@ -1,4 +1,3 @@
 # chess-machine
-Egy sakkozógép, ami jelenleg csak a bábuk lehetséges lépését képes felügyelni.
-
-Nagyon kezdetleges felhasználói felülete is van.
+Egy sakkozógép, ami az egyszerűbb lépéseket ismeri, és a játékosok felváltva tudnak lépni.
+Egy egyszerűbb GUI is van.
