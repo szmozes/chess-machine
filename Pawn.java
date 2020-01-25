@@ -25,6 +25,11 @@ public class Pawn extends Piece {
 		case BLACK: oppRow++; break;
 		}
 		
+		// make sure not to exceed the table edges
+		if(oppRow < 0 || oppRow >= field.table.height) {
+			return opportunities;
+		}
+		
 		// check if it can go straight
 		if(field.table.getPieceColor(oppRow, oppCol) == null) {
 			int[] oppurtunity = new int[2];
@@ -61,8 +66,10 @@ public class Pawn extends Piece {
 	}
 	
 	public void paint(Graphics g, int size) {
-		g.setColor(java.awt.Color.black);
-		g.drawString("Pawn", field.column*size, field.row*size+10);
+		 ColoredPiece("pawn", 9, 28, g, size);
 	}
 
+	public double getValue() {
+		return 1;
+	}
 }

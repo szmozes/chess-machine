@@ -3,29 +3,27 @@ package machine;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-public class Rook extends Piece {
+public class Bishop extends Piece {
 	
-	boolean hasNotMovedYet;
-	
-	public Rook(Field field, Color color) {
+	public Bishop(Field field, Color color) {
 		super(field, color);
-		hasNotMovedYet = true;
 	}
+	
 	public ArrayList<int[]> opportunities() {
 		
 		// the opportunities (x-y pairs) are stored here
 		ArrayList<int[]> opportunities = new ArrayList<int[]>();
 		
-		// to north
+		// to north-west
 		for(int i = 1; i < 8; i++) {
 
 			// to get the opportunity's spot, we add the iterator to the initial spot
-			// the row changes, the column stays
+			// the row decreases, the column decreases
 			int oppRow = field.row - i;
-			int oppCol = field.column;
+			int oppCol = field.column - i;
 			
 			// make sure not to exceed the edges
-			if(oppRow < 0) {
+			if(oppRow < 0 || oppCol < 0) {
 				break;
 			}
 			
@@ -54,16 +52,16 @@ public class Rook extends Piece {
 			break;
 		}
 
-		// to south
+		// to north-east
 		for(int i = 1; i < 8; i++) {
 
 			// to get the opportunity's spot, we add the iterator to the initial spot
-			// the row changes, the column stays
-			int oppRow = field.row + i;
-			int oppCol = field.column;
+			// the row decreases, the column increases
+			int oppRow = field.row - i;
+			int oppCol = field.column + i;
 
 			// make sure not to exceed the edges
-			if(oppRow >= field.table.height) {
+			if(oppRow < 0 || oppCol >= field.table.width) {
 				break;
 			}
 			
@@ -92,16 +90,16 @@ public class Rook extends Piece {
 			break;
 		}
 		
-		// to west
+		// to south-west
 		for(int i = 1; i < 8; i++) {
 
 			// to get the opportunity's spot, we add the iterator to the initial spot
-			// the row stays, the column changes
-			int oppRow = field.row;
+			// the row increases, the column decreases
+			int oppRow = field.row + i;
 			int oppCol = field.column - i;
 
 			// make sure not to exceed the edges
-			if(oppCol < 0) {
+			if(oppRow >= field.table.height || oppCol < 0) {
 				break;
 			}
 			
@@ -130,16 +128,16 @@ public class Rook extends Piece {
 			break;
 		}
 
-		// to east
+		// to south-east
 		for(int i = 1; i < 8; i++) {
 
 			// to get the opportunity's spot, we add the iterator to the initial spot
-			// the row stays, the column changes
-			int oppRow = field.row;
+			// the row increases, the column increases
+			int oppRow = field.row + i;
 			int oppCol = field.column + i;
 
 			// make sure not to exceed the edges
-			if(oppCol >= field.table.width) {
+			if(oppRow >= field.table.height || oppCol >= field.table.width) {
 				break;
 			}
 			
@@ -170,15 +168,14 @@ public class Rook extends Piece {
 		
 		return opportunities;
 	}
-	
-	public void paint(Graphics g, int size) {
-		ColoredPiece("|||  |||", 13, 25, g, size);
-		ColoredPiece("Rook", 9, 40, g, size);
-		ColoredPiece("Rook", 9, 20, g, size);
-	}
 
-	public double getValue() {
-		return 5;
+	public void paint(Graphics g, int size) {
+		ColoredPiece("B", 21, 17, g, size);
+		ColoredPiece("i", 23, 30, g, size);
+		ColoredPiece("shop", 12, 43, g, size);
 	}
 	
+	public double getValue() {
+		return 3;
+	}
 }

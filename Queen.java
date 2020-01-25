@@ -323,8 +323,11 @@ public class Queen extends Piece {
 	}
 	
 	public void paint(Graphics g, int size) {
-		g.setColor(java.awt.Color.black);
-		g.drawString("Queen", field.column*size, field.row*size+10);
+		ColoredPiece("QUEEN", 4, 29, g, size);
+	}
+	
+	public double getValue() {
+		return 9;
 	}
 
 
