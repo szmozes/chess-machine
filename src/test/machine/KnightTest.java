@@ -1,7 +1,5 @@
 package machine;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -41,7 +39,7 @@ public class KnightTest {
 
 	@Test
 	public void opportunitiesTest() {
-		ArrayList<int[]> opportunities = knight.opportunities();
+		ArrayList<int[]> opportunities = knight.getOpportunities();
 		for(int i = 0; i < opportunities.size(); i++) {
 			for(int j = 0; j < opportunities.get(i).length; j++) {
 				System.out.print(opportunities.get(i)[j] + " ");

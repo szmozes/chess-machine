@@ -46,7 +46,7 @@ public class RookTest {
 
 	@Test
 	public void opportunitiesTest() {
-		ArrayList<int[]> opportunities = rook.opportunities();
+		ArrayList<int[]> opportunities = rook.getOpportunities();
 		for(int i = 0; i < opportunities.size(); i++) {
 			for(int j = 0; j < opportunities.get(i).length; j++) {
 				System.out.print(opportunities.get(i)[j] + " ");

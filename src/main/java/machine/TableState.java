@@ -20,9 +20,7 @@ public class TableState {
 		fields = new Piece[8][];
 		for(int i = 0; i < 8; i++) {
 			fields[i] = new Piece[8];
-			for(int j = 0; j < 8; j++) {
-				fields[i][j] = ref.fields[i][j];
-			}
+			System.arraycopy(ref.fields[i], 0, fields[i], 0, 8);
 		}
 		whoTurns = ref.whoTurns;
 		bq = ref.bq;
@@ -59,13 +57,13 @@ public class TableState {
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
 				if(fields[i][j] != null) {
-					switch(fields[i][j].kind) {
-					case PAWN: System.out.print(fields[i][j].color == Color.WHITE ? "P" : "p"); break;
-					case ROOK: System.out.print(fields[i][j].color == Color.WHITE ? "r" : "R"); break;
-					case KNIGHT: System.out.print(fields[i][j].color == Color.WHITE ? "n" : "N"); break;
-					case BISHOP: System.out.print(fields[i][j].color == Color.WHITE ? "b" : "B"); break;
-					case QUEEN: System.out.print(fields[i][j].color == Color.WHITE ? "q" : "Q"); break;
-					case KING: System.out.print(fields[i][j].color == Color.WHITE ? "k" : "K"); break;
+					switch(fields[i][j].getKind()) {
+					case PAWN: System.out.print(fields[i][j].getColor() == Color.WHITE ? "P" : "p"); break;
+					case ROOK: System.out.print(fields[i][j].getColor() == Color.WHITE ? "r" : "R"); break;
+					case KNIGHT: System.out.print(fields[i][j].getColor() == Color.WHITE ? "n" : "N"); break;
+					case BISHOP: System.out.print(fields[i][j].getColor() == Color.WHITE ? "b" : "B"); break;
+					case QUEEN: System.out.print(fields[i][j].getColor() == Color.WHITE ? "q" : "Q"); break;
+					case KING: System.out.print(fields[i][j].getColor() == Color.WHITE ? "k" : "K"); break;
 					}
 					System.out.print("|");
 				} else {

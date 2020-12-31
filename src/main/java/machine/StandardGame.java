@@ -27,14 +27,18 @@ public class StandardGame extends Game {
 			table.placePiece(new Pawn(null, Color.BLACK), 1, i);
 		}
 	}
-	
 
-	// this function sets the best move's coordinates
-	// the first two is the starting position,
-	// the second two is the landing position
-	// and returns the best move's state's value
-	// note for the usage: it will try to move the turning player's pieces,
-	// so we will have to set the 'whoTurns'
+	/**
+	 * this function sets the best move's coordinates
+	 * 	the first two is the starting position,
+	 * 	the second two is the landing position
+	 * 	and returns the best move's state's value
+	 * 	note for the usage: it will try to move the turning player's pieces,
+	 * 	so we will have to set the 'whoTurns'
+	 * @param depth	the recursion's depth
+	 * @param bestCoords	this parameter gets set as the best move's coordinates
+	 * @return	the best move's value
+	 */
 	public double attempt(int depth, int[] bestCoords) {
 		
 		if(depth == 0) {
@@ -57,7 +61,7 @@ public class StandardGame extends Game {
 					// we found a movable piece, so we will try all its opportunities
 					if(table.getPieceColor(i, j) == whoTurns) {
 						Piece analyzedPiece = table.fields[i][j].piece;
-						ArrayList<int[]> opps = analyzedPiece.opportunities();
+						ArrayList<int[]> opps = analyzedPiece.getOpportunities();
 						
 						// go through all of its opportunities
 						for(int[] opp : opps) {
@@ -98,7 +102,7 @@ public class StandardGame extends Game {
 	}
 	
 	void setOpportunities(int row, int column) {
-		ArrayList<int[]> opps = table.getPiece(row, column).opportunities();
+		ArrayList<int[]> opps = table.getPiece(row, column).getOpportunities();
 		for(int[] opp : opps) {
 			table.fields[opp[0]][opp[1]].steppable = true;
 		}
@@ -112,5 +116,4 @@ public class StandardGame extends Game {
 		
 		super.move(fromRow, fromColumn, toRow, toColumn);
 	}
-
 }

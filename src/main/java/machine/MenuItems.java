@@ -3,20 +3,20 @@ package machine;
 import java.awt.*;
 
 class ControllButton {
-	int x0, y0;		  // button top-left coordinates 
-	int xSize, ySize; // button sizes 
-	int buttonID;	  // button ID number 
+	int x0, y0;			// button top-left coordinates
+	int xSize, ySize;	// button sizes
+	int buttonID;		// button ID number
 }
 
 // draw menu items and return the serial number of the selected item
 public class MenuItems {
 
-	int menuWidth;    // Width  of the menu at the right of the board (in pixels)
-	int menuSquare=4; // Width  of the menu = 4 * squareSize (4 chessboard square)
-	int squareSize;   // Size of one chessboard square in pixels
-	int menuButton=4; // forward, backward, fast-forward, fast-backward 
-	int x0, y0;		  // menu top-left coordinates 
-	int xSize, ySize; // menu sizes
+	int menuWidth;		// Width  of the menu at the right of the board (in pixels)
+	int menuSquare=4;	// Width  of the menu = 4 * squareSize (4 chessboard square)
+	int squareSize;		// Size of one chessboard square in pixels
+	int menuButton=4;	// forward, backward, fast-forward, fast-backward
+	int x0, y0;			// menu top-left coordinates
+	int xSize, ySize;	// menu sizes
 	ControllButton buttonFastBackward;
 	ControllButton buttonBackward;
 	ControllButton buttonForward;
@@ -39,8 +39,7 @@ public class MenuItems {
 		int xSize, ySize; // max size of a chessboard square in pixels
 		xSize = panelWidth/(8+menuSquare); // 8 chessboard square + 4 space width for the menu
 		ySize = panelHeight/8;
-		if (xSize>ySize) this.squareSize = ySize;  // squareSize: size of a chessboard square
-		else this.squareSize = xSize;		  
+		this.squareSize = Math.min(xSize, ySize);  // squareSize: size of a chessboard square
 		this.menuWidth = getMenuWidth(squareSize); // Width of the menu
 
 		return this.squareSize;
@@ -48,7 +47,7 @@ public class MenuItems {
 
 	public boolean buttonClicked(ControllButton button1, int xPixel, int yPixel) {
 		// check whether mouse click is between button coordinates
-		boolean bClicked=false;
+		boolean bClicked;
 		bClicked = (button1.x0<=xPixel) && (xPixel<=(button1.x0+button1.xSize)) &&
 				   (button1.y0<=yPixel) && (yPixel<=(button1.y0+button1.ySize));
 
@@ -70,9 +69,9 @@ public class MenuItems {
 		double x;
 		x  = x1;
 		x *= xRatio;
-		x += (double) (x0);
-		x1 = (int) (x);
-		return x1;
+		x += x0;
+		int ret = (int) (x);
+		return ret;
 	}
 
 	public void drawLineButton(Graphics g, ControllButton lineButton, int x1, int y1, int x2, int y2) {
@@ -92,8 +91,8 @@ public class MenuItems {
 		y2=convertCoordinate(y2, lineButton.y0, lineButton.ySize);
 		x3=convertCoordinate(x3, lineButton.x0, lineButton.xSize);
 		y3=convertCoordinate(y3, lineButton.y0, lineButton.ySize);
-		int x[] = { x1, x2, x3 };
-		int y[] = { y1, y2, y3 };
+		int[] x = { x1, x2, x3 };
+		int[] y = { y1, y2, y3 };
 		g.fillPolygon(x, y, 3);
 		/*
 		g.setColor(new java.awt.Color(0, 0, 0));
@@ -143,7 +142,7 @@ public class MenuItems {
 		this.x0	   = (int) (squareSize*8.5);
 		this.y0	   = (int) (squareSize*3.75);
 		this.xSize = squareSize*(menuSquare-1);
-		this.ySize = (int) (squareSize/2);
+		this.ySize = squareSize/2;
 		paintButtons(g);
 	}
 }

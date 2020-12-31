@@ -46,7 +46,7 @@ public class PawnTest {
 		table.placePiece(p2, 5, 3);
 		table.placePiece(p3, 5, 5);
 		int result;
-		ArrayList<int[]> opportunities = pawn.opportunities();
+		ArrayList<int[]> opportunities = pawn.getOpportunities();
 		for(int i = 0; i < opportunities.size(); i++) {
 			for(int j = 0; j < opportunities.get(i).length; j++) {
 				result = opportunities.get(i)[j];
@@ -77,7 +77,7 @@ public class PawnTest {
 	@Test
 	public void opportunitiesTest2() {
 		table.placePiece(pawn, 6, 2);
-		ArrayList<int[]> opportunities = pawn.opportunities();
+		ArrayList<int[]> opportunities = pawn.getOpportunities();
 		for(int i = 0; i < opportunities.size(); i++) {
 			for(int j = 0; j < opportunities.get(i).length; j++) {
 				System.out.print(opportunities.get(i)[j] + " ");

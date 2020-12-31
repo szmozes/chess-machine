@@ -5,11 +5,12 @@ import java.awt.event.MouseEvent;
 
 public class MyMouseListener extends MouseAdapter {
 	
-	TablePanel panel;
+	View panel;
 	Game game;
 	Piece grabbed;
 
-	public MyMouseListener(TablePanel panel, Game game) {
+
+	public MyMouseListener(View panel, Game game) {
 		this.panel = panel;
 		this.game = game;
 		grabbed = null;
@@ -23,7 +24,7 @@ public class MyMouseListener extends MouseAdapter {
     		int column = e.getX()/panel.size;
     		int row = e.getY()/panel.size;
     		
-    		if ((column<8) && (row<8)) { /** clicked on the chess board */
+    		if ((column<8) && (row<8)) { // clicked on the chess board
 	    		Field chosenField = panel.table.fields[row][column];
 	    		
 	    		// choosing state
@@ -36,7 +37,7 @@ public class MyMouseListener extends MouseAdapter {
 	    		} 
 	    		
 		    	// if the user wants to make a valid move
-	    		else if(chosenField.steppable == true) {
+	    		else if(chosenField.steppable) {
 	    			game.userMove(grabbed.field.row, grabbed.field.column, row, column);
 	    			// go back to choosing state
 	    			panel.table.setChoosingState();
@@ -44,13 +45,13 @@ public class MyMouseListener extends MouseAdapter {
 				}
 	    		
 	    		// if the user wants to make an invalid move
-	    		else if(chosenField.steppable == false) {
+	    		else {
 	    			// we go back to choosing state
 					panel.table.setChoosingState();
 					grabbed = null;
 				}
     		}	
-    		else { /** clicked out of the chess board */
+    		else { // clicked out of the chess board
 				int clickedButton = panel.rightMenu.getButtonID(e.getX(), e.getY());
     			panel.handleMenu.buttonHandler(clickedButton);
     		}

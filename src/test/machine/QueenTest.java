@@ -45,7 +45,7 @@ public class QueenTest {
 
 	@Test
 	public void opportunitiesTest() {
-		ArrayList<int[]> opportunities = queen.opportunities();
+		ArrayList<int[]> opportunities = queen.getOpportunities();
 		for(int i = 0; i < opportunities.size(); i++) {
 			for(int j = 0; j < opportunities.get(i).length; j++) {
 				System.out.print(opportunities.get(i)[j] + " ");

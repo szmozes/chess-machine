@@ -6,6 +6,7 @@ public class StandardGameNew {
 
 	TableState table;
 	ArrayList<TableState> log;
+
 	
 	public StandardGameNew() {
 		table = new TableState();
@@ -35,10 +36,10 @@ public class StandardGameNew {
 			return opportunities;
 		}
 		
-		switch(chosen.kind) {
+		switch(chosen.getKind()) {
 		case PAWN:
 			
-			switch(chosen.color) {
+			switch(chosen.getColor()) {
 			case WHITE:
 				
 				// make sure not to exceed the table edge
@@ -69,7 +70,7 @@ public class StandardGameNew {
 				// capture to west
 				if(column-1 >= 0) {
 					Piece westPiece = table.fields[row-1][column-1];
-					if(westPiece != null && westPiece.color != Color.WHITE) {
+					if(westPiece != null && westPiece.getColor() != Color.WHITE) {
 						int[] oppurtunity = new int[2];
 						oppurtunity[0] = row-1;
 						oppurtunity[1] = column-1;
@@ -80,7 +81,7 @@ public class StandardGameNew {
 				// capture to east
 				if(column+1 < 8) {
 					Piece eastPiece = table.fields[row-1][column+1];
-					if(eastPiece != null && eastPiece.color != Color.WHITE) {
+					if(eastPiece != null && eastPiece.getColor() != Color.WHITE) {
 						int[] oppurtunity = new int[2];
 						oppurtunity[0] = row-1;
 						oppurtunity[1] = column+1;
@@ -120,7 +121,7 @@ public class StandardGameNew {
 				// capture to west
 				if(column-1 >= 0) {
 					Piece westPiece = table.fields[row+1][column-1];
-					if(westPiece != null && westPiece.color != Color.BLACK) {
+					if(westPiece != null && westPiece.getColor() != Color.BLACK) {
 						int[] oppurtunity = new int[2];
 						oppurtunity[0] = row+1;
 						oppurtunity[1] = column-1;
@@ -131,7 +132,7 @@ public class StandardGameNew {
 				// capture to east
 				if(column+1 < 8) {
 					Piece eastPiece = table.fields[row+1][column+1];
-					if(eastPiece != null && eastPiece.color != Color.BLACK) {
+					if(eastPiece != null && eastPiece.getColor() != Color.BLACK) {
 						int[] oppurtunity = new int[2];
 						oppurtunity[0] = row+1;
 						oppurtunity[1] = column+1;
@@ -172,7 +173,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -210,7 +211,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -239,7 +240,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -248,7 +249,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -277,7 +278,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -286,7 +287,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -320,7 +321,7 @@ public class StandardGameNew {
 				}
 
 				// an then, the other conditions, for example, if there is a same colored piece
-				if(table.fields[oppRow][oppCol].color != chosen.color) {
+				if(table.fields[oppRow][oppCol].getColor() != chosen.getColor()) {
 					int[] oppurtunity = new int[2];
 					oppurtunity[0] = oppRow;
 					oppurtunity[1] = oppCol;
@@ -349,7 +350,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -358,7 +359,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -387,7 +388,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -396,7 +397,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -425,7 +426,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -434,7 +435,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -463,7 +464,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -472,7 +473,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -514,7 +515,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -552,7 +553,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -581,7 +582,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -590,7 +591,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -619,7 +620,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -628,7 +629,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -658,7 +659,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -667,7 +668,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -696,7 +697,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -705,7 +706,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -734,7 +735,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -743,7 +744,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -772,7 +773,7 @@ public class StandardGameNew {
 				Piece local = table.fields[oppRow][oppCol];
 				
 				// if it's empty, we add the opportunity, and go further
-				if(local.color == null) {
+				if(local.getColor() == null) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -781,7 +782,7 @@ public class StandardGameNew {
 				}
 				
 				// if it's not empty, we stop, and add the opportunity if needed
-				if(local.color != chosen.color) {
+				if(local.getColor() != chosen.getColor()) {
 					int[] opportunity = new int[2];
 					opportunity[0] = oppRow;
 					opportunity[1] = oppCol;
@@ -815,7 +816,7 @@ public class StandardGameNew {
 				}
 
 				// an then, the other conditions, for example, if there is a same colored piece
-				if(table.fields[oppRow][oppCol].color != chosen.color) {
+				if(table.fields[oppRow][oppCol].getColor() != chosen.getColor()) {
 					int[] oppurtunity = new int[2];
 					oppurtunity[0] = oppRow;
 					oppurtunity[1] = oppCol;
@@ -828,5 +829,4 @@ public class StandardGameNew {
 		
 		return opportunities;
 	}
-	
 }
