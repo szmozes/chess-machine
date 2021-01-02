@@ -1,6 +1,6 @@
 package machine;
 
 public enum Color {
-	BLACK,
-	WHITE
+    BLACK,
+    WHITE
 }

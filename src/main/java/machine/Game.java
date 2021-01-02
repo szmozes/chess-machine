@@ -1,7 +1,6 @@
 package machine;
 
-public class Game {
-
+public abstract class Game {
     Color whoTurns;
     Table table;
 
@@ -10,8 +9,9 @@ public class Game {
         whoTurns = Color.WHITE;
     }
 
-    public void move(int fromRow, int fromColumn, int toRow, int toColumn) {
-        // set who turns
+    public abstract boolean move(int fromRow, int fromColumn, int toRow, int toColumn);
+
+    public void switchWhoTurns() {
         switch (whoTurns) {
             case WHITE:
                 whoTurns = Color.BLACK;
@@ -22,12 +22,19 @@ public class Game {
         }
     }
 
-    public void userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
-        move(fromRow, fromColumn, toRow, toColumn);
+    /**
+     * Processes a user move
+     * @param fromRow       the row where the moved piece was
+     * @param fromColumn    the column where the moved piece was
+     * @param toRow         the row where the moved piece goes
+     * @param toColumn      the column where the moved piece goes
+     * @return              true if the pawn reached the final rank
+     */
+    public boolean userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
+        return move(fromRow, fromColumn, toRow, toColumn);
     }
 
     public void wake() {
-
     }
 
     void setOpportunities(int row, int column) {

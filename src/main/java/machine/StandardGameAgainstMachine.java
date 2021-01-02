@@ -1,9 +1,7 @@
 package machine;
 
 public class StandardGameAgainstMachine extends StandardGame {
-
     Color machine;
-
 
     public StandardGameAgainstMachine() {
         super();
@@ -22,13 +20,16 @@ public class StandardGameAgainstMachine extends StandardGame {
         move(bestCoords[0], bestCoords[1], bestCoords[2], bestCoords[3]);
     }
 
-    public void userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
+    public boolean userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 
-        move(fromRow, fromColumn, toRow, toColumn);
+        boolean pawnReached = move(fromRow, fromColumn, toRow, toColumn);
+
+        // here we should switch a flag what a computing thread looks or something like that
 
         if (whoTurns == machine) {
             makeMove(4);
         }
+        return pawnReached;
     }
 
     public void wake() {

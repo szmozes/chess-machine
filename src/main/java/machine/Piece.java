@@ -3,11 +3,9 @@ package machine;
 import java.util.ArrayList;
 
 public class Piece {
-
     Field field;
-    private final PieceEnum kind;
-    private final Color color;
-
+    final PieceEnum kind;
+    final Color color;
 
     public Piece(Field field, PieceEnum kind, Color color) {
         this.field = field;
@@ -39,26 +37,6 @@ public class Piece {
         return 0;
     }
 
-    public Field getField() {
-        return this.field;
-    }
-
-    public PieceEnum getKind() {
-        return this.kind;
-    }
-
-    public Color getColor() {
-        return this.color;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
-    }
-
-    public String toString() {
-        return "Piece(field=" + this.getField() + ", kind=" + this.getKind() + ", color=" + this.getColor() + ")";
-    }
-
     void toNorth(ArrayList<int[]> opportunities) {
         for (int i = 1; i < 8; i++) {
 
@@ -85,7 +63,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -124,7 +102,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -163,7 +141,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -202,7 +180,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -241,7 +219,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -280,7 +258,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -319,7 +297,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;
@@ -358,7 +336,7 @@ public class Piece {
             }
 
             // if it's not empty, we stop, and add the opportunity if needed
-            if (color != this.getColor()) {
+            if (color != this.color) {
                 int[] opportunity = new int[2];
                 opportunity[0] = oppRow;
                 opportunity[1] = oppCol;

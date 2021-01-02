@@ -1,10 +1,13 @@
-package machine;
+package performancebased;
+
+import machine.Color;
+import machine.PieceEnum;
 
 public class TableState {
-
 	Piece[][] fields;
 	Color whoTurns;
-	boolean bq, bk, wq, wk;	// the players can castle
+	boolean bq, bk, wq, wk;		// castling rights
+	Position enPassantTarget;
 
 	public TableState() {
 		fields = new Piece[8][];
@@ -39,8 +42,8 @@ public class TableState {
 		fields[0][6] = new Piece(PieceEnum.KNIGHT, Color.BLACK);
 		fields[0][7] = new Piece(PieceEnum.ROOK, Color.BLACK);
 		fields[7][0] = new Piece(PieceEnum.ROOK, Color.WHITE);
-		fields[7][1] = new Piece(PieceEnum.KNIGHT, Color.WHITE);
-		fields[7][2] = new Piece(PieceEnum.BISHOP, Color.WHITE);
+		fields[7][1] = new Piece(PieceEnum.BISHOP, Color.WHITE);
+		fields[7][2] = new Piece(PieceEnum.KNIGHT, Color.WHITE);
 		fields[7][3] = new Piece(PieceEnum.QUEEN, Color.WHITE);
 		fields[7][4] = new Piece(PieceEnum.KING, Color.WHITE);
 		fields[7][5] = new Piece(PieceEnum.BISHOP, Color.WHITE);
@@ -57,14 +60,7 @@ public class TableState {
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
 				if(fields[i][j] != null) {
-					switch(fields[i][j].getKind()) {
-					case PAWN: System.out.print(fields[i][j].getColor() == Color.WHITE ? "P" : "p"); break;
-					case ROOK: System.out.print(fields[i][j].getColor() == Color.WHITE ? "r" : "R"); break;
-					case KNIGHT: System.out.print(fields[i][j].getColor() == Color.WHITE ? "n" : "N"); break;
-					case BISHOP: System.out.print(fields[i][j].getColor() == Color.WHITE ? "b" : "B"); break;
-					case QUEEN: System.out.print(fields[i][j].getColor() == Color.WHITE ? "q" : "Q"); break;
-					case KING: System.out.print(fields[i][j].getColor() == Color.WHITE ? "k" : "K"); break;
-					}
+					System.out.print(fields[i][j]);
 					System.out.print("|");
 				} else {
 					System.out.print("_|");

@@ -4,15 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class StandardGameTest {
-	
-	Table table;
-	StandardGame game;
-	
-	
+    Table table;
+    StandardGame game;
+
 //	 A - Ally
 //	 E - Enemy
 //	 O - Test
-	 
+
 //	   ___________________
 //	   |\|0|1|2|3|4|5|6|7|
 //	   |0|_|_|K|_|_|_|_|_|
@@ -23,24 +21,24 @@ public class StandardGameTest {
 //	   |5|_|_|_|_|_|_|_|_|
 //	   |6|_|_|_|_|_|_|_|_|
 //	   |7|_|_|_|_|_|_|_|_|
-	
-	@Before
-	public void setUp() {
-		table = new Table(8, 8);
-		game = new StandardGame();
-	}
-	
-	@Test
-	public void attemptTest() {
-		table.placePiece(new Bishop(null, Color.WHITE), 4, 4);
-		table.placePiece(new Knight(null, Color.BLACK), 0, 2);
-		table.placePiece(new Rook(null, Color.BLACK), 2, 6);
-		table.write();
-		int[] bestMove = new int[4];
-		double state = game.attempt(2, bestMove);
-		System.out.println("best move : " + state + " " + bestMove[0] + " " + bestMove[1] + " " + bestMove[2] + " " + bestMove[3] + "\n");
-		System.out.println(game.whoTurns + " turns");
-	}
+
+    @Before
+    public void setUp() {
+        table = new Table(8, 8);
+        game = new StandardGame();
+    }
+
+    @Test
+    public void attemptTest() {
+        table.placePiece(new Bishop(null, Color.WHITE), 4, 4);
+        table.placePiece(new Knight(null, Color.BLACK), 0, 2);
+        table.placePiece(new Rook(null, Color.BLACK), 2, 6);
+        table.write();
+        int[] bestMove = new int[4];
+        double state = game.attempt(2, bestMove);
+        System.out.println("best move : " + state + " " + bestMove[0] + " " + bestMove[1] + " " + bestMove[2] + " " + bestMove[3] + "\n");
+        System.out.println(game.whoTurns + " turns");
+    }
 	
 /*
 //	___________________

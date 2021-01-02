@@ -1,5 +1,9 @@
+.idea
 *.iml
 .project
 .classpath
-.idea
-out
+.settings
+/out/
+/bin/
+META-INF/
+

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 //	|7|_|_|_|_|_|_|_|_|	|/|a|b|c|d|e|f|g|h|
 
 public class Table {
-
     Field[][] fields;
     int height, width;
     Color whoTurns;
@@ -41,7 +40,7 @@ public class Table {
         Field field = fields[row][column];
         field.setPiece(piece);
         if (piece != null) {
-            piece.setField(field);
+            piece.field = field;
         }
     }
 
@@ -53,7 +52,7 @@ public class Table {
         if (piece == null) {
             return null;
         } else {
-            return piece.getColor();
+            return piece.color;
         }
     }
 
@@ -91,7 +90,7 @@ public class Table {
         }
     }
 
-    public void setChoosingState() {
+    public void makeFieldsUnsteppable() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 fields[i][j].steppable = false;
@@ -106,7 +105,7 @@ public class Table {
             for (int j = 0; j < width; j++) {
                 Piece piece = fields[i][j].piece;
                 if (piece != null) {
-                    Color color = piece.getColor();
+                    Color color = piece.color;
                     switch (color) {
                         case WHITE:
                             ret += piece.getValue();

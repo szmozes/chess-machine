@@ -6,7 +6,6 @@ import org.junit.Test;
 
 
 public class FieldTest {
-	
 	Field field;
 
 	@Before
@@ -20,5 +19,4 @@ public class FieldTest {
 		field.setPiece(piece);
 		Assert.assertNotNull(field.piece);
 	}
-
 }

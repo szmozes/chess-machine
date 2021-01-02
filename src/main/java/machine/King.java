@@ -3,9 +3,7 @@ package machine;
 import java.util.ArrayList;
 
 public class King extends Piece {
-
     boolean hasNotMovedYet;
-
 
     public King(Field field, Color color) {
         super(field, PieceEnum.KING, color);
@@ -35,7 +33,7 @@ public class King extends Piece {
             }
 
             // an then, the other conditions, for example, if there is a same colored piece
-            if (super.field.table.getPieceColor(oppRow, oppCol) != super.getColor()) {
+            if (super.field.table.getPieceColor(oppRow, oppCol) != super.color) {
                 int[] oppurtunity = new int[2];
                 oppurtunity[0] = oppRow;
                 oppurtunity[1] = oppCol;

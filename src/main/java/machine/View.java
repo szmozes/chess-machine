@@ -6,16 +6,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class View extends JPanel {
-
     Graphics g;
     Table table;
     int size;               // length of a field in pixels
     int menuWidth;          // menu width (at the right of the board)
     MenuItems rightMenu;    // menu at the right of the chessboard
     MenuHandler handleMenu; // execute the clicked menu item
-
 
     BufferedImage blackBishopImage;
     BufferedImage blackKingImage;
@@ -39,6 +40,20 @@ public class View extends JPanel {
         this.table = table;
     }
 
+    public static void main(String[] args) {
+
+        Game game = new StandardGame();
+        View view = new View(game.table);
+        view.init();
+        view.addMouseListener(new MyMouseListener(view, game));
+
+        JFrame f = new JFrame();
+        f.setContentPane(view);
+        f.pack();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+
     public void init() {
 
         String imagePath = "src/main/resources/images";
@@ -56,10 +71,20 @@ public class View extends JPanel {
             whitePawnImage = ImageIO.read(new File(imagePath, "white_pawn.png"));
             whiteQueenImage = ImageIO.read(new File(imagePath, "white_queen.png"));
             whiteRookImage = ImageIO.read(new File(imagePath, "white_rook.png"));
-
         } catch (IOException e) {
-            System.out.println("valamelyik kepet nem lehetett betolteni");
+            System.out.println("some of the pictures couldn't be loaded");
         }
+    }
+
+    public PieceEnum askUserForPiece() {
+        Object[] pieceEnums = {PieceEnum.QUEEN, PieceEnum.BISHOP, PieceEnum.KNIGHT, PieceEnum.ROOK};
+        PieceEnum chosenPieceKind = (PieceEnum) JOptionPane.showInputDialog(null,
+                "Choose the piece you want", "Choosing piece",
+                JOptionPane.QUESTION_MESSAGE, null, pieceEnums, pieceEnums[0]);
+        if (chosenPieceKind == null) {
+            chosenPieceKind = PieceEnum.QUEEN;
+        }
+        return chosenPieceKind;
     }
 
     public void paint(Graphics g) {
@@ -92,21 +117,7 @@ public class View extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
-
-        Game game = new StandardGameAgainstMachine();
-        View view = new View(game.table);
-        view.init();
-        view.addMouseListener(new MyMouseListener(view, game));
-
-        JFrame f = new JFrame();
-        f.setContentPane(view);
-        f.pack();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-    }
-
-    private void paintField(Field field){
+    private void paintField(Field field) {
 
         // paint the piece
         if (field.getPiece() != null) {
@@ -126,23 +137,32 @@ public class View extends JPanel {
 
     private void paintPiece(Piece piece) {
         BufferedImage pieceImage = getImageByPiece(piece);
-        Field field = piece.getField();
+        Field field = piece.field;
         g.drawImage(pieceImage, field.column * size, field.row * size, size, size, null);
+    }
+
+    private BufferedImage getRead(String imagePath, String filename) {
+        try {
+            return ImageIO.read(new File(imagePath, filename));
+        } catch (IOException e) {
+            System.out.println(filename + " at " + imagePath + " couldn't be loaded");
+            return null;
+        }
     }
 
     private BufferedImage getImageByPiece(Piece piece) {
         if (piece instanceof Bishop) {
-            return piece.getColor() == Color.BLACK ? blackBishopImage : whiteBishopImage;
+            return piece.color == Color.BLACK ? blackBishopImage : whiteBishopImage;
         } else if (piece instanceof King) {
-            return piece.getColor() == Color.BLACK ? blackKingImage : whiteKingImage;
+            return piece.color == Color.BLACK ? blackKingImage : whiteKingImage;
         } else if (piece instanceof Knight) {
-            return piece.getColor() == Color.BLACK ? blackKnightImage : whiteKnightImage;
+            return piece.color == Color.BLACK ? blackKnightImage : whiteKnightImage;
         } else if (piece instanceof Pawn) {
-            return piece.getColor() == Color.BLACK ? blackPawnImage : whitePawnImage;
+            return piece.color == Color.BLACK ? blackPawnImage : whitePawnImage;
         } else if (piece instanceof Queen) {
-            return piece.getColor() == Color.BLACK ? blackQueenImage : whiteQueenImage;
+            return piece.color == Color.BLACK ? blackQueenImage : whiteQueenImage;
         } else if (piece instanceof Rook) {
-            return piece.getColor() == Color.BLACK ? blackRookImage : whiteRookImage;
+            return piece.color == Color.BLACK ? blackRookImage : whiteRookImage;
         } else {
             return null;
         }

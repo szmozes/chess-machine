@@ -3,9 +3,7 @@ package machine;
 import java.util.ArrayList;
 
 public class Rook extends Piece {
-
     boolean hasNotMovedYet;
-
 
     public Rook(Field field, Color color) {
         super(field, PieceEnum.ROOK, color);

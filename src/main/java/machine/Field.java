@@ -1,13 +1,11 @@
 package machine;
 
 public class Field {
-
     Table table;
     int column;
     int row;
     Piece piece;
     boolean steppable;
-
 
     public Field(Table table, int row, int column) {
         this.table = table;

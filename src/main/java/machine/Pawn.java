@@ -3,10 +3,8 @@ package machine;
 import java.util.ArrayList;
 
 public class Pawn extends Piece {
-
     boolean hasNotMovedYet;
     boolean hasJustJumped;
-
 
     public Pawn(Field field, Color color) {
         super(field, PieceEnum.PAWN, color);
@@ -23,7 +21,7 @@ public class Pawn extends Piece {
         int col = field.column;
 
         // first we distinguish between black and white
-        switch (getColor()) {
+        switch (color) {
             case WHITE:
 
                 // make sure not to exceed the table edge
@@ -54,7 +52,7 @@ public class Pawn extends Piece {
                 // capture to west
                 if (col - 1 >= 0) {
                     Color westColor = field.table.getPieceColor(row - 1, col - 1);
-                    if (westColor != null && westColor != this.getColor()) {
+                    if (westColor != null && westColor != this.color) {
                         int[] oppurtunity = new int[2];
                         oppurtunity[0] = row - 1;
                         oppurtunity[1] = col - 1;
@@ -65,7 +63,7 @@ public class Pawn extends Piece {
                 // capture to east
                 if (col + 1 < field.table.width) {
                     Color eastColor = field.table.getPieceColor(row - 1, col + 1);
-                    if (eastColor != null && eastColor != this.getColor()) {
+                    if (eastColor != null && eastColor != this.color) {
                         int[] oppurtunity = new int[2];
                         oppurtunity[0] = row - 1;
                         oppurtunity[1] = col + 1;
@@ -103,7 +101,7 @@ public class Pawn extends Piece {
                 // capture to west
                 if (col - 1 >= 0) {
                     Color westColor = field.table.getPieceColor(row + 1, col - 1);
-                    if (westColor != null && westColor != this.getColor()) {
+                    if (westColor != null && westColor != this.color) {
                         int[] oppurtunity = new int[2];
                         oppurtunity[0] = row + 1;
                         oppurtunity[1] = col - 1;
@@ -114,7 +112,7 @@ public class Pawn extends Piece {
                 // capture to east
                 if (col + 1 < field.table.width) {
                     Color eastColor = field.table.getPieceColor(row + 1, col + 1);
-                    if (eastColor != null && eastColor != this.getColor()) {
+                    if (eastColor != null && eastColor != this.color) {
                         int[] oppurtunity = new int[2];
                         oppurtunity[0] = row + 1;
                         oppurtunity[1] = col + 1;
