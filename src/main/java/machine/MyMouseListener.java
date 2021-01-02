@@ -7,12 +7,14 @@ public class MyMouseListener extends MouseAdapter {
     View view;
     Game game;
     Piece grabbed;
+    Position grabbedPiecePosition;
     UIState state;
 
     public MyMouseListener(View view, Game game) {
         this.view = view;
         this.game = game;
         grabbed = null;
+        grabbedPiecePosition = null;
         state = UIState.CHOOSING;
     }
 
@@ -52,36 +54,40 @@ public class MyMouseListener extends MouseAdapter {
         Piece newPiece = null;
         switch (newPieceKind) {
             case BISHOP:
-                newPiece = new Bishop(grabbed.field, grabbed.color);
+                newPiece = new Bishop(grabbed.color);
                 break;
             case KNIGHT:
-                newPiece = new Knight(grabbed.field, grabbed.color);
+                newPiece = new Knight(grabbed.color);
                 break;
             case QUEEN:
-                newPiece = new Queen(grabbed.field, grabbed.color);
+                newPiece = new Queen(grabbed.color);
                 break;
             case ROOK:
-                newPiece = new Rook(grabbed.field, grabbed.color);
+                newPiece = new Rook(grabbed.color);
                 break;
         }
-        game.table.placePiece(newPiece, grabbed.field.row, grabbed.field.column);
+        game.table.placePiece(newPiece, grabbedPiecePosition.row, grabbedPiecePosition.column);
         grabbed = null;
+        grabbedPiecePosition = null;
         state = UIState.CHOOSING;
     }
 
     private void puttingAPiece(int column, int row) {
         if (view.table.fields[row][column].canBeSteppedOn) {
-            boolean pawnToFinalRank = game.userMove(grabbed.field.row, grabbed.field.column, row, column);
+            boolean pawnToFinalRank = game.userMove(grabbedPiecePosition.row, grabbedPiecePosition.column, row, column);
+            grabbedPiecePosition = new Position(row, column);
             view.table.makeFieldsUnableToBeSteppedOn();
             if (pawnToFinalRank) {
                 promotingAPawn();
             } else {
                 grabbed = null;
+                grabbedPiecePosition = null;
                 state = UIState.CHOOSING;
             }
         } else {
             view.table.makeFieldsUnableToBeSteppedOn();
             grabbed = null;
+            grabbedPiecePosition = null;
             state = UIState.CHOOSING;
         }
     }
@@ -90,7 +96,8 @@ public class MyMouseListener extends MouseAdapter {
         Color pieceColor = view.table.getPieceColor(row, column);
         if (pieceColor == game.table.whoTurns) {
             grabbed = view.table.fields[row][column].piece;
-            game.setOpportunities(row, column);
+            grabbedPiecePosition = new Position(row, column);
+            game.table.setOpportunities(row, column);
             state = UIState.GRABBING;
         }
     }

@@ -6,25 +6,25 @@ public class StandardGame extends Game {
 
     public StandardGame() {
         super();
-        table.placePiece(new Rook(null, Color.WHITE), 7, 0);
-        table.placePiece(new Knight(null, Color.WHITE), 7, 1);
-        table.placePiece(new Bishop(null, Color.WHITE), 7, 2);
-        table.placePiece(new Queen(null, Color.WHITE), 7, 3);
-        table.placePiece(new King(null, Color.WHITE), 7, 4);
-        table.placePiece(new Bishop(null, Color.WHITE), 7, 5);
-        table.placePiece(new Knight(null, Color.WHITE), 7, 6);
-        table.placePiece(new Rook(null, Color.WHITE), 7, 7);
-        table.placePiece(new Rook(null, Color.BLACK), 0, 0);
-        table.placePiece(new Knight(null, Color.BLACK), 0, 1);
-        table.placePiece(new Bishop(null, Color.BLACK), 0, 2);
-        table.placePiece(new Queen(null, Color.BLACK), 0, 3);
-        table.placePiece(new King(null, Color.BLACK), 0, 4);
-        table.placePiece(new Bishop(null, Color.BLACK), 0, 5);
-        table.placePiece(new Knight(null, Color.BLACK), 0, 6);
-        table.placePiece(new Rook(null, Color.BLACK), 0, 7);
+        table.placePiece(new Rook(Color.WHITE), 7, 0);
+        table.placePiece(new Knight(Color.WHITE), 7, 1);
+        table.placePiece(new Bishop(Color.WHITE), 7, 2);
+        table.placePiece(new Queen(Color.WHITE), 7, 3);
+        table.placePiece(new King(Color.WHITE), 7, 4);
+        table.placePiece(new Bishop(Color.WHITE), 7, 5);
+        table.placePiece(new Knight(Color.WHITE), 7, 6);
+        table.placePiece(new Rook(Color.WHITE), 7, 7);
+        table.placePiece(new Rook(Color.BLACK), 0, 0);
+        table.placePiece(new Knight(Color.BLACK), 0, 1);
+        table.placePiece(new Bishop(Color.BLACK), 0, 2);
+        table.placePiece(new Queen(Color.BLACK), 0, 3);
+        table.placePiece(new King(Color.BLACK), 0, 4);
+        table.placePiece(new Bishop(Color.BLACK), 0, 5);
+        table.placePiece(new Knight(Color.BLACK), 0, 6);
+        table.placePiece(new Rook(Color.BLACK), 0, 7);
         for (int i = 0; i < 8; i++) {
-            table.placePiece(new Pawn(null, Color.WHITE), 6, i);
-            table.placePiece(new Pawn(null, Color.BLACK), 1, i);
+            table.placePiece(new Pawn(Color.WHITE), 6, i);
+            table.placePiece(new Pawn(Color.BLACK), 1, i);
         }
     }
 
@@ -72,18 +72,16 @@ public class StandardGame extends Game {
                         for (Position opp : opportunities) {
 
                             // save the data for the restoration
-                            int startingRow = analyzedPiece.field.row;
-                            int startingColumn = analyzedPiece.field.column;
                             Piece knocked = table.fields[opp.row][opp.column].piece;
 
                             // make a move, and then guess, how good the move was
-                            move(startingRow, startingColumn, opp.row, opp.column);
+                            move(i, j, opp.row, opp.column);
                             int[] willBeThrown = new int[4];
                             double howGood = attempt(depth - 1, willBeThrown);
 
                             // make changes back
                             table.placePiece(knocked, opp.row, opp.column);
-                            table.placePiece(analyzedPiece, startingRow, startingColumn);
+                            table.placePiece(analyzedPiece, i, j);
 //                            table = initialTable;
                             switch (table.whoTurns) {
                                 case WHITE:
@@ -97,8 +95,8 @@ public class StandardGame extends Game {
                             // we found a better move
                             if ((table.whoTurns == Color.WHITE && howGood > best) || (table.whoTurns == Color.BLACK && howGood < best)) {
                                 best = howGood;
-                                bestCoords[0] = startingRow;
-                                bestCoords[1] = startingColumn;
+                                bestCoords[0] = i;
+                                bestCoords[1] = j;
                                 bestCoords[2] = opp.row;
                                 bestCoords[3] = opp.column;
                             }
@@ -110,18 +108,11 @@ public class StandardGame extends Game {
         }
     }
 
-    void setOpportunities(int row, int column) {
-        List<Position> opportunities = table.getOpportunities(new Position(row, column));
-        for (Position opp : opportunities) {
-            table.fields[opp.row][opp.column].canBeSteppedOn = true;
-        }
-    }
-
     public boolean move(int fromRow, int fromColumn, int toRow, int toColumn) {
 
         Piece piece = table.getPiece(fromRow, fromColumn);
 
-        updateCastleRights(piece);
+        updateCastleRights(piece, fromColumn);
         switchWhoTurns();
 
         table.placePiece(piece, toRow, toColumn);
@@ -142,13 +133,12 @@ public class StandardGame extends Game {
 //            }
 //        }
 
-        return piece.kind == PieceEnum.PAWN && pieceOnFurthestRank(piece);
+
+        int furthestRank = piece.color == Color.BLACK ? 7 : 0;
+        return piece.kind == PieceEnum.PAWN && toRow == furthestRank;
     }
 
-    private void updateCastleRights(Piece movedPiece) {
-        if (movedPiece == null) {       // it should be useless
-            return;
-        }
+    private void updateCastleRights(Piece movedPiece, int fromColumn) {
         if (movedPiece.kind == PieceEnum.KING) {
             if (movedPiece.color == Color.BLACK) {
                 table.bk = false;
@@ -159,23 +149,18 @@ public class StandardGame extends Game {
             }
         } else if (movedPiece.kind == PieceEnum.ROOK) {
             if (movedPiece.color == Color.BLACK) {
-                if (movedPiece.field.column == 0) {
+                if (fromColumn == 0) {
                     table.bq = false;
-                } else if (movedPiece.field.column == 7) {
+                } else if (fromColumn == 7) {
                     table.bk = false;
                 }
             } else if (movedPiece.color == Color.WHITE) {
-                if (movedPiece.field.column == 0) {
+                if (fromColumn == 0) {
                     table.wq = false;
-                } else if (movedPiece.field.column == 7) {
+                } else if (fromColumn == 7) {
                     table.wk = false;
                 }
             }
         }
-    }
-
-    private boolean pieceOnFurthestRank(Piece piece) {
-        int furthestRank = piece.color == Color.BLACK ? 7 : 0;
-        return piece.field.row == furthestRank;
     }
 }

@@ -39,7 +39,6 @@ public class TableStateTest {
         tableState.bk = false;
         tableState.wq = false;
         tableState.wk = false;
-        System.out.println("Halo");
 
         // see if the copy changed (it shouldn't change)
         assertEquals(PieceEnum.ROOK, copy.fields[0][0].kind);

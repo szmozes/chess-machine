@@ -35,8 +35,4 @@ public abstract class Game {
     public void wake() {
     }
 
-    void setOpportunities(int row, int column) {
-
-    }
-
 }

@@ -15,7 +15,7 @@ public class FieldTest {
 	
 	@Test
 	public void testSetPieceGetPiece() {
-		Piece piece = new Piece(new Field(null, 0, 0), Color.WHITE);
+		Piece piece = new Piece(PieceEnum.PAWN, Color.WHITE);
 		field.setPiece(piece);
 		Assert.assertNotNull(field.piece);
 	}

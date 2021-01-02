@@ -58,9 +58,6 @@ public class Table {
     public void placePiece(Piece piece, int row, int column) {
         Field field = fields[row][column];
         field.setPiece(piece);
-        if (piece != null) {
-            piece.field = field;
-        }
     }
 
     public Color getPieceColor(int row, int column) {
@@ -76,22 +73,6 @@ public class Table {
     }
 
     // for test purposes
-    public void write() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (fields[i][j].piece != null) {
-                    fields[i][j].piece.write();
-                    System.out.print("|");
-                } else {
-                    System.out.print("__|");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    // for test purposes
     public void canBeSteppedWrite() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -102,10 +83,10 @@ public class Table {
         }
     }
 
-    public void setOpportunities(Piece grabbed) {
-        List<Position> opportunities = getOpportunities(new Position(grabbed.field.row, grabbed.field.column));
-        for (Position p : opportunities) {
-            fields[p.row][p.column].canBeSteppedOn = true;
+    public void setOpportunities(int row, int column) {
+        List<Position> opportunities = getOpportunities(new Position(row, column));
+        for (Position opp : opportunities) {
+            fields[opp.row][opp.column].canBeSteppedOn = true;
         }
     }
 
@@ -322,13 +303,7 @@ public class Table {
 
                 // make sure not to exceed the table edge
                 if (row - 1 < 0) {
-
-                    List<Position> ret = new ArrayList<>();
-                    for (Position opp : opportunities) {
-                        ret.add(new Position(position.row, position.column));
-                    }
-
-                    return ret;
+                    return opportunities;
                 }
 
                 // the fields before it are empty
@@ -369,13 +344,7 @@ public class Table {
 
                 // make sure not to exceed the table edge
                 if (row + 1 >= height) {
-
-                    List<Position> ret = new ArrayList<>();
-                    for (Position opp : opportunities) {
-                        ret.add(new Position(position.row, position.column));
-                    }
-
-                    return ret;
+                    return opportunities;
                 }
 
                 // the fields before it are empty

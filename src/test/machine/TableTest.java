@@ -1,5 +1,6 @@
 package machine;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,8 +14,8 @@ public class TableTest {
 
     @Test
     public void testGetPieceColor() {
-        Piece test = new Piece(table.fields[1][1], Color.WHITE);
+        Piece test = new Piece(PieceEnum.PAWN, Color.WHITE);
         table.placePiece(test, 1, 1);
-        System.out.println(table.getPieceColor(1, 1));
+        Assert.assertEquals(Color.WHITE, table.getPieceColor(1, 1));
     }
 }

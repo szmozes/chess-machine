@@ -117,7 +117,7 @@ public class View extends JPanel {
 
         // paint the piece
         if (field.getPiece() != null) {
-            paintPiece(field.getPiece());
+            paintPiece(field.getPiece(), field.row, field.column);
         }
 
         // and the little sign of opportunity
@@ -131,10 +131,9 @@ public class View extends JPanel {
         }
     }
 
-    private void paintPiece(Piece piece) {
+    private void paintPiece(Piece piece, int row, int column) {
         BufferedImage pieceImage = getImageByPiece(piece);
-        Field field = piece.field;
-        g.drawImage(pieceImage, field.column * size, field.row * size, size, size, null);
+        g.drawImage(pieceImage, column * size, row * size, size, size, null);
     }
 
     private BufferedImage getRead(String imagePath, String filename) {

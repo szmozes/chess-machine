@@ -2,8 +2,8 @@ package machine;
 
 public class Rook extends Piece {
 
-    public Rook(Field field, Color color) {
-        super(field, PieceEnum.ROOK, color);
+    public Rook(Color color) {
+        super(PieceEnum.ROOK, color);
     }
 
     public double getValue() {

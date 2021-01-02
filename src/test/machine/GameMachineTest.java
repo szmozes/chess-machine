@@ -24,20 +24,22 @@ public class GameMachineTest {
 
     @Before
     public void setUp() {
-        table = new Table(8, 8);
         game = new StandardGameAgainstMachine();
+        table = game.table;
+        clearTable(table);
     }
 
     @Test
     public void attemptTest() {
-        table.placePiece(new Bishop(null, Color.WHITE), 4, 4);
-        table.placePiece(new Knight(null, Color.BLACK), 0, 2);
-        table.placePiece(new Rook(null, Color.BLACK), 2, 6);
-        table.write();
+        TestWriter.writeTestTitle("Attempt Test");
+        table.placePiece(new Bishop(Color.WHITE), 4, 4);
+        table.placePiece(new Knight(Color.BLACK), 0, 2);
+        table.placePiece(new Rook(Color.BLACK), 2, 6);
+        TestWriter.writeTable(table);
         int[] bestMove = new int[4];
         double state = game.attempt(2, bestMove);
-        System.out.println("best move : " + state + " " + bestMove[0] + " " + bestMove[1] + " " + bestMove[2] + " " + bestMove[3] + "\n");
-        System.out.println(game.table.whoTurns + " turns");
+        TestWriter.writeString("best move value: " + state + " from: [" + bestMove[0] + ", " + bestMove[1] + "] to: [" + bestMove[2] + ", " + bestMove[3] + "]\n");
+        TestWriter.writeString(game.table.whoTurns + " turns");
     }
 
 
@@ -53,13 +55,16 @@ public class GameMachineTest {
 //	|7|_|_|_|_|_|_|_|_|
     @Test
     public void makeMoveTest1() {
-        table.placePiece(new Queen(null, Color.WHITE), 5, 4);
-        table.placePiece(new Knight(null, Color.BLACK), 2, 1);
-        table.placePiece(new Rook(null, Color.BLACK), 3, 6);
-        table.placePiece(new Pawn(null, Color.BLACK), 2, 5);
-        table.write();
+        TestWriter.writeTestTitle("Make Move Test");
+        table.placePiece(new Queen(Color.WHITE), 5, 4);
+        table.placePiece(new Knight(Color.BLACK), 2, 1);
+        table.placePiece(new Rook(Color.BLACK), 3, 6);
+        table.placePiece(new Pawn(Color.BLACK), 2, 5);
+        TestWriter.writeString("before making a move:");
+        TestWriter.writeTable(table);
         game.makeMove(1);
-        table.write();
+        TestWriter.writeString("after making a move:");
+        TestWriter.writeTable(table);
     }
 
     //	___________________
@@ -74,12 +79,23 @@ public class GameMachineTest {
 //	|7|_|_|_|_|_|_|_|_|
     @Test
     public void makeMoveTest2() {
-        table.placePiece(new Queen(null, Color.WHITE), 5, 4);
-        table.placePiece(new Bishop(null, Color.BLACK), 2, 1);
-        table.placePiece(new Rook(null, Color.BLACK), 3, 6);
-        table.placePiece(new Pawn(null, Color.BLACK), 2, 5);
-        table.write();
+        TestWriter.writeTestTitle("Make Move Test 2");
+        table.placePiece(new Queen(Color.WHITE), 5, 4);
+        table.placePiece(new Bishop(Color.BLACK), 2, 1);
+        table.placePiece(new Rook(Color.BLACK), 3, 6);
+        table.placePiece(new Pawn(Color.BLACK), 2, 5);
+        TestWriter.writeString("before making a move:");
+        TestWriter.writeTable(table);
         game.makeMove(2);
-        table.write();
+        TestWriter.writeString("after making a move:");
+        TestWriter.writeTable(table);
+    }
+
+    private void clearTable(Table table) {
+        for (int i = 0; i < table.height; i++) {
+            for (int j = 0; j < table.width; j++) {
+                table.fields[i][j].piece = null;
+            }
+        }
     }
 }
