@@ -1,23 +1,21 @@
 package machine;
 
 public abstract class Game {
-    Color whoTurns;
-    Table table;
+    final Table table;
 
     public Game() {
         table = new Table(8, 8);
-        whoTurns = Color.WHITE;
     }
 
     public abstract boolean move(int fromRow, int fromColumn, int toRow, int toColumn);
 
     public void switchWhoTurns() {
-        switch (whoTurns) {
-            case WHITE:
-                whoTurns = Color.BLACK;
-                break;
+        switch (table.whoTurns) {
             case BLACK:
-                whoTurns = Color.WHITE;
+                table.whoTurns = Color.WHITE;
+                break;
+            case WHITE:
+                table.whoTurns = Color.BLACK;
                 break;
         }
     }

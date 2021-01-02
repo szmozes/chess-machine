@@ -3,9 +3,9 @@ package machine;
 import org.junit.Before;
 import org.junit.Test;
 
-public class StandardGameTest {
+public class GameMachineTest {
     Table table;
-    StandardGame game;
+    StandardGameAgainstMachine game;
 
 //	 A - Ally
 //	 E - Enemy
@@ -25,7 +25,7 @@ public class StandardGameTest {
     @Before
     public void setUp() {
         table = new Table(8, 8);
-        game = new StandardGame();
+        game = new StandardGameAgainstMachine();
     }
 
     @Test
@@ -37,11 +37,11 @@ public class StandardGameTest {
         int[] bestMove = new int[4];
         double state = game.attempt(2, bestMove);
         System.out.println("best move : " + state + " " + bestMove[0] + " " + bestMove[1] + " " + bestMove[2] + " " + bestMove[3] + "\n");
-        System.out.println(game.whoTurns + " turns");
+        System.out.println(game.table.whoTurns + " turns");
     }
-	
-/*
-//	___________________
+
+
+    //	___________________
 //  |\|0|1|2|3|4|5|6|7|
 //	|0|_|_|_|_|_|_|_|_|
 //	|1|_|_|_|_|_|_|_|_|
@@ -51,18 +51,18 @@ public class StandardGameTest {
 //	|5|_|_|_|_|Q|_|_|_|
 //	|6|_|_|_|_|_|_|_|_|
 //	|7|_|_|_|_|_|_|_|_|
-	@Test
-	public void makeMoveTest1() {
-		table.placePiece(new Queen(null, Color.WHITE), 5, 4);
-		table.placePiece(new Knight(null, Color.BLACK), 2, 1);
-		table.placePiece(new Rook(null, Color.BLACK), 3, 6);
-		table.placePiece(new Pawn(null, Color.BLACK), 2, 5);
-		table.write();
-		game.makeMove(1);
-		table.write();
-	}
-	
-//	___________________
+    @Test
+    public void makeMoveTest1() {
+        table.placePiece(new Queen(null, Color.WHITE), 5, 4);
+        table.placePiece(new Knight(null, Color.BLACK), 2, 1);
+        table.placePiece(new Rook(null, Color.BLACK), 3, 6);
+        table.placePiece(new Pawn(null, Color.BLACK), 2, 5);
+        table.write();
+        game.makeMove(1);
+        table.write();
+    }
+
+    //	___________________
 //  |\|0|1|2|3|4|5|6|7|
 //	|0|_|_|_|_|_|_|_|_|
 //	|1|_|_|_|_|_|_|_|_|
@@ -72,14 +72,14 @@ public class StandardGameTest {
 //	|5|_|_|_|_|Q|_|_|_|
 //	|6|_|_|_|_|_|_|_|_|
 //	|7|_|_|_|_|_|_|_|_|
-	@Test
-	public void makeMoveTest2() {
-		table.placePiece(new Queen(null, Color.WHITE), 5, 4);
-		table.placePiece(new Bishop(null, Color.BLACK), 2, 1);
-		table.placePiece(new Rook(null, Color.BLACK), 3, 6);
-		table.placePiece(new Pawn(null, Color.BLACK), 2, 5);
-		table.write();
-		game.makeMove(2);
-		table.write();
-	}*/
+    @Test
+    public void makeMoveTest2() {
+        table.placePiece(new Queen(null, Color.WHITE), 5, 4);
+        table.placePiece(new Bishop(null, Color.BLACK), 2, 1);
+        table.placePiece(new Rook(null, Color.BLACK), 3, 6);
+        table.placePiece(new Pawn(null, Color.BLACK), 2, 5);
+        table.write();
+        game.makeMove(2);
+        table.write();
+    }
 }

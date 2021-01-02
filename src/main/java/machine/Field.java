@@ -5,29 +5,17 @@ public class Field {
     int column;
     int row;
     Piece piece;
-    boolean steppable;
+    boolean canBeSteppedOn;
 
     public Field(Table table, int row, int column) {
         this.table = table;
         this.row = row;
         this.column = column;
-        steppable = false;
-    }
-
-    public Table getTable() {
-        return table;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
+        canBeSteppedOn = false;
     }
 
     public int getColumn() {
         return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
     }
 
     public int getRow() {
@@ -46,15 +34,7 @@ public class Field {
         this.piece = piece;
     }
 
-    public boolean isSteppable() {
-        return steppable;
-    }
-
-    public void setSteppable(boolean steppable) {
-        this.steppable = steppable;
-    }
-
-    public String toString() {
-        return "Field(table=" + this.getTable() + ", column=" + this.getColumn() + ", row=" + this.getRow() + ", piece=" + this.getPiece() + ", steppable=" + this.isSteppable() + ")";
+    public boolean isCanBeSteppedOn() {
+        return canBeSteppedOn;
     }
 }

@@ -70,9 +70,9 @@ public class MyMouseListener extends MouseAdapter {
     }
 
     private void puttingAPiece(int column, int row) {
-        if (view.table.fields[row][column].steppable) {
+        if (view.table.fields[row][column].canBeSteppedOn) {
             boolean pawnToFinalRank = game.userMove(grabbed.field.row, grabbed.field.column, row, column);
-            view.table.makeFieldsUnsteppable();
+            view.table.makeFieldsUnableToBeSteppedOn();
             if (pawnToFinalRank) {
                 promotingAPawn();
             } else {
@@ -80,7 +80,7 @@ public class MyMouseListener extends MouseAdapter {
                 state = UIState.CHOOSING;
             }
         } else {
-            view.table.makeFieldsUnsteppable();
+            view.table.makeFieldsUnableToBeSteppedOn();
             grabbed = null;
             state = UIState.CHOOSING;
         }
@@ -88,7 +88,7 @@ public class MyMouseListener extends MouseAdapter {
 
     private void choosingAPiece(int column, int row) {
         Color pieceColor = view.table.getPieceColor(row, column);
-        if (pieceColor == game.whoTurns) {
+        if (pieceColor == game.table.whoTurns) {
             grabbed = view.table.fields[row][column].piece;
             game.setOpportunities(row, column);
             state = UIState.GRABBING;

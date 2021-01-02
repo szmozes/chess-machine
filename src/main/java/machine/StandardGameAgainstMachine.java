@@ -1,7 +1,7 @@
 package machine;
 
 public class StandardGameAgainstMachine extends StandardGame {
-    Color machine;
+    final Color machine;
 
     public StandardGameAgainstMachine() {
         super();
@@ -24,16 +24,16 @@ public class StandardGameAgainstMachine extends StandardGame {
 
         boolean pawnReached = move(fromRow, fromColumn, toRow, toColumn);
 
-        // here we should switch a flag what a computing thread looks or something like that
+        // here we should switch a flag what a computing thread watches or something like that
 
-        if (whoTurns == machine) {
+        if (table.whoTurns == machine) {
             makeMove(4);
         }
         return pawnReached;
     }
 
     public void wake() {
-        if (whoTurns == machine) {
+        if (table.whoTurns == machine) {
             makeMove(4);
         }
     }

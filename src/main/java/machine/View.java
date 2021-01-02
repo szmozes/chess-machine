@@ -6,13 +6,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class View extends JPanel {
     Graphics g;
-    Table table;
+    final Table table;
     int size;               // length of a field in pixels
     int menuWidth;          // menu width (at the right of the board)
     MenuItems rightMenu;    // menu at the right of the chessboard
@@ -42,12 +39,12 @@ public class View extends JPanel {
 
     public static void main(String[] args) {
 
-        Game game = new StandardGame();
+        Game game = new StandardGameAgainstMachine();
         View view = new View(game.table);
         view.init();
         view.addMouseListener(new MyMouseListener(view, game));
 
-        JFrame f = new JFrame();
+        JFrame f = new JFrame("Chess Program");
         f.setContentPane(view);
         f.pack();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,8 +52,7 @@ public class View extends JPanel {
     }
 
     public void init() {
-
-        String imagePath = "src/main/resources/images";
+        String imagePath = "images";
 
         try {
             blackBishopImage = ImageIO.read(new File(imagePath, "black_bishop.png"));
@@ -125,7 +121,7 @@ public class View extends JPanel {
         }
 
         // and the little sign of opportunity
-        if (field.isSteppable()) {
+        if (field.isCanBeSteppedOn()) {
             g.setColor(new java.awt.Color(200, 200, 255));
             int column = field.getColumn();
             int row = field.getRow();

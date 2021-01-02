@@ -70,8 +70,7 @@ public class MenuItems {
         x = x1;
         x *= xRatio;
         x += x0;
-        int ret = (int) (x);
-        return ret;
+        return (int) (x);
     }
 
     public void drawLineButton(Graphics g, ControlButton lineButton, int x1, int y1, int x2, int y2) {
@@ -94,10 +93,10 @@ public class MenuItems {
         int[] x = {x1, x2, x3};
         int[] y = {y1, y2, y3};
         g.fillPolygon(x, y, 3);
-		/*
+
 		g.setColor(new java.awt.Color(0, 0, 0));
 		g.drawPolygon(x, y, 3);
-		 */
+
     }
 
     public void button1(Graphics g, ControlButton button1, int x0, int y0, int xSize, int ySize, int bID) {

@@ -1,10 +1,7 @@
-package performancebased;
-
-import machine.Color;
-import machine.PieceEnum;
+package machine;
 
 public class TableState {
-	Piece[][] fields;
+	final Piece[][] fields;
 	Color whoTurns;
 	boolean bq, bk, wq, wk;		// castling rights
 	Position enPassantTarget;
@@ -54,7 +51,7 @@ public class TableState {
 			fields[6][i] = new Piece(PieceEnum.PAWN, Color.WHITE);
 		}
 	}
-	
+
 	// for test purposes
 	public void print() {
 		for(int i = 0; i < 8; i++) {
