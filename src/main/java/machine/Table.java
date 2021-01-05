@@ -16,8 +16,8 @@ import java.util.List;
 
 public class Table {
     final Field[][] fields;
-    final int height;
-    final int width;
+    int height;
+    int width;
     Color whoTurns;
     boolean wk, wq, bk, bq;    // how the players can castle
 
@@ -27,7 +27,7 @@ public class Table {
         fields = new Field[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                fields[i][j] = new Field(this, i, j);
+                fields[i][j] = new Field(i, j);
             }
         }
         whoTurns = Color.WHITE;
@@ -45,9 +45,14 @@ public class Table {
         this.bq = bq;
     }
 
-    public Table getCopy() {
-        Field[][] fields = this.fields;
-
+    public Table copy() {
+        Field[][] newFields;
+        newFields = new Field[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                newFields[i][j] = fields[i][j].copy();
+            }
+        }
         return new Table(fields, height, width, whoTurns, wk, wq, bk, bq);
     }
 
@@ -72,17 +77,6 @@ public class Table {
         }
     }
 
-    // for test purposes
-    public void canBeSteppedWrite() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                System.out.print(fields[i][j].canBeSteppedOn);
-                System.out.print("  ");
-            }
-            System.out.println();
-        }
-    }
-
     public void setOpportunities(int row, int column) {
         List<Position> opportunities = getOpportunities(new Position(row, column));
         for (Position opp : opportunities) {
@@ -98,7 +92,9 @@ public class Table {
         }
     }
 
-    // a primitive way to get the current state (which player has more chance to win)
+    /**
+     * a primitive way to get the current state (which player has more chance to win)
+     */
     public double state() {
         double ret = 0;
         for (int i = 0; i < height; i++) {

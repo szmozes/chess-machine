@@ -22,6 +22,22 @@ public class TestWriter {
                 }
                 System.out.println();
             }
+            System.out.println("who turns: " + table.whoTurns);
+            System.out.print("castles: ");
+            if(table.bq) System.out.print("bq ");
+            if(table.bk) System.out.print("bk ");
+            if(table.wq) System.out.print("wq ");
+            if(table.wk) System.out.print("wk ");
+            System.out.println();
+        }
+    }
+
+    static void writeTableCanBeStepped(Table table) {
+        for (int i = 0; i < table.height; i++) {
+            for (int j = 0; j < table.width; j++) {
+                System.out.print(table.fields[i][j].canBeSteppedOn);
+                System.out.print("  ");
+            }
             System.out.println();
         }
     }

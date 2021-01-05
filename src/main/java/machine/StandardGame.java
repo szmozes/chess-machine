@@ -56,16 +56,24 @@ public class StandardGame extends Game {
                     break;
             }
 
-            // save the table state
-            Table initialTable = table.getCopy();
-
-            // to find the best possible move, we have to search the whole table
+            // to find the best possible move, we search the whole table for movable pieces
             for (int i = 0; i < table.height; i++) {
                 for (int j = 0; j < table.width; j++) {
 
-                    // we found a movable piece, so we will try all its opportunities
-                    if (table.getPieceColor(i, j) == table.whoTurns) {
-                        Piece analyzedPiece = table.fields[i][j].piece;
+                    // we found a movable piece, so we will try all of its opportunities
+                    Color pieceColor = null;
+                    Field fieldToGetTheColor = null;
+                    Piece pieceToGetTheColor = null;
+                    if (i >= 0 && i < table.height && j >= 0 && j < table.width) {
+                        fieldToGetTheColor = table.fields[i][j];
+                        pieceToGetTheColor = fieldToGetTheColor.piece;
+                        if (pieceToGetTheColor != null) {
+                            pieceColor = pieceToGetTheColor.color;
+                        }
+                    }
+                    if (pieceColor == table.whoTurns) {
+                        Field analyzedField = table.fields[i][j];
+                        Piece analyzedPiece = analyzedField.piece;
                         List<Position> opportunities = table.getOpportunities(new Position(i, j));
 
                         // go through all of its opportunities
@@ -73,24 +81,18 @@ public class StandardGame extends Game {
 
                             // save the data for the restoration
                             Piece knocked = table.fields[opp.row][opp.column].piece;
+//                            Table initialTable = table.copy();
 
-                            // make a move, and then guess, how good the move was
-                            move(i, j, opp.row, opp.column);
-                            int[] willBeThrown = new int[4];
-                            double howGood = attempt(depth - 1, willBeThrown);
+                            // make a move, and then guess how good the move was
+                            boolean pawnPromoted = move(i, j, opp.row, opp.column);
+//                            table.fields[opp.row][opp.column].piece = new Piece(PieceKind.QUEEN, table.whoTurns);
+                            double howGood = attempt(depth - 1, new int[4]);
 
                             // make changes back
                             table.placePiece(knocked, opp.row, opp.column);
                             table.placePiece(analyzedPiece, i, j);
+                            switchWhoTurns();
 //                            table = initialTable;
-                            switch (table.whoTurns) {
-                                case WHITE:
-                                    table.whoTurns = Color.BLACK;
-                                    break;
-                                case BLACK:
-                                    table.whoTurns = Color.WHITE;
-                                    break;
-                            }
 
                             // we found a better move
                             if ((table.whoTurns == Color.WHITE && howGood > best) || (table.whoTurns == Color.BLACK && howGood < best)) {
@@ -110,7 +112,10 @@ public class StandardGame extends Game {
 
     public boolean move(int fromRow, int fromColumn, int toRow, int toColumn) {
 
-        Piece piece = table.getPiece(fromRow, fromColumn);
+        TestWriter.writeTable(table);
+
+        Field fromField = table.fields[fromRow][fromColumn];
+        Piece piece = fromField.piece;
 
         updateCastleRights(piece, fromColumn);
         switchWhoTurns();
@@ -119,7 +124,7 @@ public class StandardGame extends Game {
         table.placePiece(null, fromRow, fromColumn);
 
 //        // check if it's a castle move
-//        if (piece.kind == PieceEnum.KING) {
+//        if (piece.kind == PieceKind.KING) {
 //            if (Math.abs(toColumn - fromColumn) > 1) {
 //                if (toColumn == 1) {
 //                    Piece rook = table.fields[toRow][0].piece;
@@ -135,11 +140,11 @@ public class StandardGame extends Game {
 
 
         int furthestRank = piece.color == Color.BLACK ? 7 : 0;
-        return piece.kind == PieceEnum.PAWN && toRow == furthestRank;
+        return piece.kind == PieceKind.PAWN && toRow == furthestRank;
     }
 
     private void updateCastleRights(Piece movedPiece, int fromColumn) {
-        if (movedPiece.kind == PieceEnum.KING) {
+        if (movedPiece.kind == PieceKind.KING) {
             if (movedPiece.color == Color.BLACK) {
                 table.bk = false;
                 table.bq = false;
@@ -147,7 +152,7 @@ public class StandardGame extends Game {
                 table.wk = false;
                 table.wq = false;
             }
-        } else if (movedPiece.kind == PieceEnum.ROOK) {
+        } else if (movedPiece.kind == PieceKind.ROOK) {
             if (movedPiece.color == Color.BLACK) {
                 if (fromColumn == 0) {
                     table.bq = false;

@@ -7,13 +7,17 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static machine.Color.BLACK;
+
 public class View extends JPanel {
     Graphics g;
-    final Table table;
     int size;               // length of a field in pixels
     int menuWidth;          // menu width (at the right of the board)
     MenuItems rightMenu;    // menu at the right of the chessboard
     MenuHandler handleMenu; // execute the clicked menu item
+    Controller controller;
+    Table table;
+    Color machineColor;
 
     BufferedImage blackBishopImage;
     BufferedImage blackKingImage;
@@ -28,27 +32,30 @@ public class View extends JPanel {
     BufferedImage whiteQueenImage;
     BufferedImage whiteRookImage;
 
-    public View(Table table) {
-        size = 60;      // initial value
+    public View() {
         rightMenu = new MenuItems();
         handleMenu = new MenuHandler();
-        menuWidth = rightMenu.getMenuWidth(size);
-        setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
-        this.table = table;
     }
 
     public static void main(String[] args) {
+        createAndShowGUI();
+    }
 
-        Game game = new StandardGameAgainstMachine();
-        View view = new View(game.table);
-        view.init();
-        view.addMouseListener(new MyMouseListener(view, game));
+    private JMenuBar createMenu() {
 
-        JFrame f = new JFrame("Chess Program");
-        f.setContentPane(view);
-        f.pack();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
+        // menu bar
+        JMenuBar menuBar = new JMenuBar();
+
+        // first menu
+        JMenu menu = new JMenu("Game");
+        menuBar.add(menu);
+
+        // first menu items
+        JMenuItem menuItem = new JMenuItem("New Game");
+        menuItem.addActionListener(arg0 -> newGame());
+        menu.add(menuItem);
+
+        return menuBar;
     }
 
     public void init() {
@@ -70,15 +77,26 @@ public class View extends JPanel {
         } catch (IOException e) {
             System.out.println("some of the pictures couldn't be loaded");
         }
+
+        size = 60;
+        menuWidth = rightMenu.getMenuWidth(size);
+        Game game = new StandardGame();
+        controller = new Controller(this, game);
+        controller.game = game;
+        table = controller.game.table;
+        controller.gameType = GameType.AGAINST_MACHINE;
+        machineColor = BLACK;
+        addMouseListener(controller);
+        setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
     }
 
-    public PieceEnum askUserForPiece() {
-        Object[] pieceEnums = {PieceEnum.QUEEN, PieceEnum.BISHOP, PieceEnum.KNIGHT, PieceEnum.ROOK};
-        PieceEnum chosenPieceKind = (PieceEnum) JOptionPane.showInputDialog(null,
+    public PieceKind askUserForPiece() {
+        Object[] pieceEnums = {PieceKind.QUEEN, PieceKind.BISHOP, PieceKind.KNIGHT, PieceKind.ROOK};
+        PieceKind chosenPieceKind = (PieceKind) JOptionPane.showInputDialog(null,
                 "Choose the piece you want", "Choosing piece",
                 JOptionPane.QUESTION_MESSAGE, null, pieceEnums, pieceEnums[0]);
         if (chosenPieceKind == null) {
-            chosenPieceKind = PieceEnum.QUEEN;
+            chosenPieceKind = PieceKind.QUEEN;
         }
         return chosenPieceKind;
     }
@@ -95,9 +113,9 @@ public class View extends JPanel {
         for (int i = 0; i < table.height; i++) {
             for (int j = 0; j < table.width; j++) {
                 if ((i + j) % 2 == 0) {
-                    g.setColor(new java.awt.Color(235, 235, 127));
+                    g.setColor(new java.awt.Color(255, 255, 127));
                 } else {
-                    g.setColor(new java.awt.Color(150, 150, 90));
+                    g.setColor(new java.awt.Color(127, 63, 0));
                 }
                 g.fillRect(j * size, i * size, size, size);
             }
@@ -108,25 +126,23 @@ public class View extends JPanel {
         // fields
         for (int i = 0; i < table.height; i++) {
             for (int j = 0; j < table.width; j++) {
-                paintField(table.fields[i][j]);
+                paintField(table.fields[i][j], i, j);
             }
         }
     }
 
-    private void paintField(Field field) {
+    private void paintField(Field field, int row, int column) {
 
         // paint the piece
         if (field.getPiece() != null) {
-            paintPiece(field.getPiece(), field.row, field.column);
+            paintPiece(field.getPiece(), row, column);
         }
 
         // and the little sign of opportunity
         if (field.isCanBeSteppedOn()) {
-            g.setColor(new java.awt.Color(200, 200, 255));
-            int column = field.getColumn();
-            int row = field.getRow();
+            g.setColor(new java.awt.Color(200, 200, 255, 255));
             g.fillOval(column * size + size * 3 / 8, row * size + size * 3 / 8, size / 4, size / 4);
-            g.setColor(new java.awt.Color(0, 0, 0));
+            g.setColor(new java.awt.Color(0, 0, 0, 255));
             g.drawOval(column * size + size * 3 / 8, row * size + size * 3 / 8, size / 4, size / 4);
         }
     }
@@ -134,6 +150,31 @@ public class View extends JPanel {
     private void paintPiece(Piece piece, int row, int column) {
         BufferedImage pieceImage = getImageByPiece(piece);
         g.drawImage(pieceImage, column * size, row * size, size, size, null);
+    }
+
+    private static void createAndShowGUI() {
+        View view = new View();
+        view.init();
+
+        JFrame f = new JFrame("Chess Program");
+        f.setJMenuBar(view.createMenu());
+        f.setContentPane(view);
+        f.pack();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+
+    private void newGame() {
+        Object[] colors = {BLACK, Color.WHITE};
+        Color chosenColor = (Color) JOptionPane.showInputDialog(null,
+                "Choose color you want to play with", "Choosing color",
+                JOptionPane.QUESTION_MESSAGE, null, colors, colors[0]);
+        if (chosenColor == null) {
+            chosenColor = Color.WHITE;
+        }
+        if (controller.gameType == GameType.BOTH_USER) {
+            controller.game = new StandardGameAgainstMachine(Color.values()[1 - chosenColor.ordinal()]);
+        }
     }
 
     private BufferedImage getRead(String imagePath, String filename) {
@@ -147,19 +188,20 @@ public class View extends JPanel {
 
     private BufferedImage getImageByPiece(Piece piece) {
         if (piece instanceof Bishop) {
-            return piece.color == Color.BLACK ? blackBishopImage : whiteBishopImage;
+            return piece.color == BLACK ? blackBishopImage : whiteBishopImage;
         } else if (piece instanceof King) {
-            return piece.color == Color.BLACK ? blackKingImage : whiteKingImage;
+            return piece.color == BLACK ? blackKingImage : whiteKingImage;
         } else if (piece instanceof Knight) {
-            return piece.color == Color.BLACK ? blackKnightImage : whiteKnightImage;
+            return piece.color == BLACK ? blackKnightImage : whiteKnightImage;
         } else if (piece instanceof Pawn) {
-            return piece.color == Color.BLACK ? blackPawnImage : whitePawnImage;
+            return piece.color == BLACK ? blackPawnImage : whitePawnImage;
         } else if (piece instanceof Queen) {
-            return piece.color == Color.BLACK ? blackQueenImage : whiteQueenImage;
+            return piece.color == BLACK ? blackQueenImage : whiteQueenImage;
         } else if (piece instanceof Rook) {
-            return piece.color == Color.BLACK ? blackRookImage : whiteRookImage;
+            return piece.color == BLACK ? blackRookImage : whiteRookImage;
         } else {
             return null;
         }
     }
+
 }

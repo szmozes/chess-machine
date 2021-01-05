@@ -3,14 +3,15 @@ package machine;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MyMouseListener extends MouseAdapter {
+public class Controller extends MouseAdapter {
     View view;
     Game game;
+    GameType gameType;
     Piece grabbed;
     Position grabbedPiecePosition;
     UIState state;
 
-    public MyMouseListener(View view, Game game) {
+    public Controller(View view, Game game) {
         this.view = view;
         this.game = game;
         grabbed = null;
@@ -50,20 +51,20 @@ public class MyMouseListener extends MouseAdapter {
     }
 
     private void promotingAPawn() {
-        PieceEnum newPieceKind = view.askUserForPiece();
+        PieceKind newPieceKind = view.askUserForPiece();
         Piece newPiece = null;
         switch (newPieceKind) {
             case BISHOP:
-                newPiece = new Bishop(grabbed.color);
+                newPiece = new Piece(PieceKind.BISHOP, grabbed.color);
                 break;
             case KNIGHT:
-                newPiece = new Knight(grabbed.color);
+                newPiece = new Piece(PieceKind.KNIGHT, grabbed.color);
                 break;
             case QUEEN:
-                newPiece = new Queen(grabbed.color);
+                newPiece = new Piece(PieceKind.QUEEN, grabbed.color);
                 break;
             case ROOK:
-                newPiece = new Rook(grabbed.color);
+                newPiece = new Piece(PieceKind.ROOK, grabbed.color);
                 break;
         }
         game.table.placePiece(newPiece, grabbedPiecePosition.row, grabbedPiecePosition.column);
@@ -107,4 +108,9 @@ enum UIState {
     CHOOSING,
     GRABBING,
     PROMOTING
+}
+
+enum GameType {
+    BOTH_USER,
+    AGAINST_MACHINE
 }

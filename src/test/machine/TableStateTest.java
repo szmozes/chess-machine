@@ -1,9 +1,5 @@
 package machine;
 
-import machine.Color;
-import machine.Piece;
-import machine.PieceEnum;
-import machine.TableState;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +15,7 @@ public class TableStateTest {
 
     @Test
     public void testConstructor() {
-        assertEquals(PieceEnum.ROOK, tableState.fields[0][0].kind);
+        assertEquals(PieceKind.ROOK, tableState.fields[0][0].kind);
         assertNull(tableState.fields[3][3]);
         assertEquals(Color.WHITE, tableState.whoTurns);
         assertArrayEquals(new boolean[]{true, true, true, true}, new boolean[]{tableState.bk, tableState.bq, tableState.wk, tableState.wq});
@@ -33,7 +29,7 @@ public class TableStateTest {
 
         // act
         tableState.fields[0][0] = null;
-        tableState.fields[3][3] = new Piece(PieceEnum.PAWN, Color.BLACK);
+        tableState.fields[3][3] = new Piece(PieceKind.PAWN, Color.BLACK);
         tableState.whoTurns = Color.BLACK;
         tableState.bq = false;
         tableState.bk = false;
@@ -41,7 +37,7 @@ public class TableStateTest {
         tableState.wk = false;
 
         // see if the copy changed (it shouldn't change)
-        assertEquals(PieceEnum.ROOK, copy.fields[0][0].kind);
+        assertEquals(PieceKind.ROOK, copy.fields[0][0].kind);
         assertNull(copy.fields[3][3]);
         assertEquals(Color.WHITE, copy.whoTurns);
         assertArrayEquals(new boolean[]{true, true, true, true}, new boolean[]{copy.bk, copy.bq, copy.wk, copy.wq});

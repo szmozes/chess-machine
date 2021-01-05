@@ -1,29 +1,24 @@
 package machine;
 
 public class Field {
-    Table table;
-    int column;
-    int row;
     Piece piece;
     boolean canBeSteppedOn;
 
-    public Field(Table table, int row, int column) {
-        this.table = table;
-        this.row = row;
-        this.column = column;
+    public Field(int row, int column) {
         canBeSteppedOn = false;
     }
 
-    public int getColumn() {
-        return column;
+    public Field(Piece piece, boolean canBeSteppedOn) {
+        this.piece = piece;
+        this.canBeSteppedOn = canBeSteppedOn;
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
+    public Field copy() {
+        Piece newPiece = null;
+        if (piece != null) {
+            newPiece = piece.copy();
+        }
+        return new Field(newPiece, canBeSteppedOn);
     }
 
     public Piece getPiece() {
@@ -37,4 +32,5 @@ public class Field {
     public boolean isCanBeSteppedOn() {
         return canBeSteppedOn;
     }
+
 }

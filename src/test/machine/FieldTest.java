@@ -10,12 +10,12 @@ public class FieldTest {
 
 	@Before
 	public void setUp() {
-		field = new Field(null, 3, 3);
+		field = new Field(3, 3);
 	}
 	
 	@Test
 	public void testSetPieceGetPiece() {
-		Piece piece = new Piece(PieceEnum.PAWN, Color.WHITE);
+		Piece piece = new Piece(PieceKind.PAWN, Color.WHITE);
 		field.setPiece(piece);
 		Assert.assertNotNull(field.piece);
 	}

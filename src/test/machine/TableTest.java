@@ -14,7 +14,7 @@ public class TableTest {
 
     @Test
     public void testGetPieceColor() {
-        Piece test = new Piece(PieceEnum.PAWN, Color.WHITE);
+        Piece test = new Piece(PieceKind.PAWN, Color.WHITE);
         table.placePiece(test, 1, 1);
         Assert.assertEquals(Color.WHITE, table.getPieceColor(1, 1));
     }

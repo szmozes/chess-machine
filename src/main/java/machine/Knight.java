@@ -3,7 +3,7 @@ package machine;
 public class Knight extends Piece {
 
     public Knight(Color color) {
-        super(PieceEnum.KNIGHT, color);
+        super(PieceKind.KNIGHT, color);
     }
 
     public double getValue() {

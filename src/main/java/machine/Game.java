@@ -1,7 +1,7 @@
 package machine;
 
 public abstract class Game {
-    final Table table;
+    Table table;
 
     public Game() {
         table = new Table(8, 8);

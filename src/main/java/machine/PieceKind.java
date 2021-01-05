@@ -1,6 +1,6 @@
 package machine;
 
-public enum PieceEnum {
+public enum PieceKind {
     PAWN,
     ROOK,
     KNIGHT,

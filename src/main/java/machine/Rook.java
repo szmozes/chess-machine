@@ -3,7 +3,7 @@ package machine;
 public class Rook extends Piece {
 
     public Rook(Color color) {
-        super(PieceEnum.ROOK, color);
+        super(PieceKind.ROOK, color);
     }
 
     public double getValue() {
