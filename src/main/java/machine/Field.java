@@ -4,7 +4,7 @@ public class Field {
     Piece piece;
     boolean canBeSteppedOn;
 
-    public Field(int row, int column) {
+    public Field() {
         canBeSteppedOn = false;
     }
 

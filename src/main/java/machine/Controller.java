@@ -109,8 +109,3 @@ enum UIState {
     GRABBING,
     PROMOTING
 }
-
-enum GameType {
-    BOTH_USER,
-    AGAINST_MACHINE
-}

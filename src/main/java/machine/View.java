@@ -80,7 +80,7 @@ public class View extends JPanel {
 
         size = 60;
         menuWidth = rightMenu.getMenuWidth(size);
-        Game game = new StandardGame();
+        Game game = new StandardGameAgainstMachine(BLACK);
         controller = new Controller(this, game);
         controller.game = game;
         table = controller.game.table;
@@ -187,17 +187,17 @@ public class View extends JPanel {
     }
 
     private BufferedImage getImageByPiece(Piece piece) {
-        if (piece instanceof Bishop) {
+        if (piece.kind == PieceKind.BISHOP) {
             return piece.color == BLACK ? blackBishopImage : whiteBishopImage;
-        } else if (piece instanceof King) {
+        } else if (piece.kind == PieceKind.KING) {
             return piece.color == BLACK ? blackKingImage : whiteKingImage;
-        } else if (piece instanceof Knight) {
+        } else if (piece.kind == PieceKind.KNIGHT) {
             return piece.color == BLACK ? blackKnightImage : whiteKnightImage;
-        } else if (piece instanceof Pawn) {
+        } else if (piece.kind == PieceKind.PAWN) {
             return piece.color == BLACK ? blackPawnImage : whitePawnImage;
-        } else if (piece instanceof Queen) {
+        } else if (piece.kind == PieceKind.QUEEN) {
             return piece.color == BLACK ? blackQueenImage : whiteQueenImage;
-        } else if (piece instanceof Rook) {
+        } else if (piece.kind == PieceKind.ROOK) {
             return piece.color == BLACK ? blackRookImage : whiteRookImage;
         } else {
             return null;

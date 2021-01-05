@@ -32,9 +32,9 @@ public class GameMachineTest {
     @Test
     public void attemptTest() {
         TestWriter.writeTestTitle("Attempt Test");
-        table.placePiece(new Bishop(Color.WHITE), 4, 4);
-        table.placePiece(new Knight(Color.BLACK), 0, 2);
-        table.placePiece(new Rook(Color.BLACK), 2, 6);
+        table.placePiece(new Piece(PieceKind.BISHOP, Color.WHITE), 4, 4);
+        table.placePiece(new Piece(PieceKind.KNIGHT, Color.BLACK), 0, 2);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 2, 6);
         TestWriter.writeTable(table);
         int[] bestMove = new int[4];
         double state = game.attempt(2, bestMove);
@@ -56,10 +56,10 @@ public class GameMachineTest {
     @Test
     public void makeMoveTest1() {
         TestWriter.writeTestTitle("Make Move Test");
-        table.placePiece(new Queen(Color.WHITE), 5, 4);
-        table.placePiece(new Knight(Color.BLACK), 2, 1);
-        table.placePiece(new Rook(Color.BLACK), 3, 6);
-        table.placePiece(new Pawn(Color.BLACK), 2, 5);
+        table.placePiece(new Piece(PieceKind.QUEEN, Color.WHITE), 5, 4);
+        table.placePiece(new Piece(PieceKind.KNIGHT, Color.BLACK), 2, 1);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 3, 6);
+        table.placePiece(new Piece(PieceKind.PAWN, Color.BLACK), 2, 5);
         TestWriter.writeString("before making a move:");
         TestWriter.writeTable(table);
         game.makeMove(1);
@@ -80,10 +80,10 @@ public class GameMachineTest {
     @Test
     public void makeMoveTest2() {
         TestWriter.writeTestTitle("Make Move Test 2");
-        table.placePiece(new Queen(Color.WHITE), 5, 4);
-        table.placePiece(new Bishop(Color.BLACK), 2, 1);
-        table.placePiece(new Rook(Color.BLACK), 3, 6);
-        table.placePiece(new Pawn(Color.BLACK), 2, 5);
+        table.placePiece(new Piece(PieceKind.QUEEN, Color.WHITE), 5, 4);
+        table.placePiece(new Piece(PieceKind.BISHOP, Color.BLACK), 2, 1);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 3, 6);
+        table.placePiece(new Piece(PieceKind.PAWN, Color.BLACK), 2, 5);
         TestWriter.writeString("before making a move:");
         TestWriter.writeTable(table);
         game.makeMove(2);

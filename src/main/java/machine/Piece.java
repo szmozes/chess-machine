@@ -35,3 +35,12 @@ public class Piece {
         return new Piece(kind, color);
     }
 }
+
+enum PieceKind {
+    PAWN,
+    ROOK,
+    KNIGHT,
+    BISHOP,
+    QUEEN,
+    KING
+}

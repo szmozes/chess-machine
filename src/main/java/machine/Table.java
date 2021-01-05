@@ -27,7 +27,7 @@ public class Table {
         fields = new Field[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                fields[i][j] = new Field(i, j);
+                fields[i][j] = new Field();
             }
         }
         whoTurns = Color.WHITE;
@@ -53,7 +53,7 @@ public class Table {
                 newFields[i][j] = fields[i][j].copy();
             }
         }
-        return new Table(fields, height, width, whoTurns, wk, wq, bk, bq);
+        return new Table(newFields, height, width, whoTurns, wk, wq, bk, bq);
     }
 
     public Piece getPiece(int row, int column) {
@@ -661,5 +661,15 @@ public class Table {
             // if it's neither empty nor enemy, then we can't go further
             break;
         }
+    }
+}
+
+class Position {
+    final int row;
+    final int column;
+
+    public Position(int row, int column) {
+        this.row = row;
+        this.column = column;
     }
 }

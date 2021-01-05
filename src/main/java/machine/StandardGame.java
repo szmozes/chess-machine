@@ -6,25 +6,25 @@ public class StandardGame extends Game {
 
     public StandardGame() {
         super();
-        table.placePiece(new Rook(Color.WHITE), 7, 0);
-        table.placePiece(new Knight(Color.WHITE), 7, 1);
-        table.placePiece(new Bishop(Color.WHITE), 7, 2);
-        table.placePiece(new Queen(Color.WHITE), 7, 3);
-        table.placePiece(new King(Color.WHITE), 7, 4);
-        table.placePiece(new Bishop(Color.WHITE), 7, 5);
-        table.placePiece(new Knight(Color.WHITE), 7, 6);
-        table.placePiece(new Rook(Color.WHITE), 7, 7);
-        table.placePiece(new Rook(Color.BLACK), 0, 0);
-        table.placePiece(new Knight(Color.BLACK), 0, 1);
-        table.placePiece(new Bishop(Color.BLACK), 0, 2);
-        table.placePiece(new Queen(Color.BLACK), 0, 3);
-        table.placePiece(new King(Color.BLACK), 0, 4);
-        table.placePiece(new Bishop(Color.BLACK), 0, 5);
-        table.placePiece(new Knight(Color.BLACK), 0, 6);
-        table.placePiece(new Rook(Color.BLACK), 0, 7);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.WHITE), 7, 0);
+        table.placePiece(new Piece(PieceKind.KNIGHT, Color.WHITE), 7, 1);
+        table.placePiece(new Piece(PieceKind.BISHOP, Color.WHITE), 7, 2);
+        table.placePiece(new Piece(PieceKind.QUEEN, Color.WHITE), 7, 3);
+        table.placePiece(new Piece(PieceKind.KING, Color.WHITE), 7, 4);
+        table.placePiece(new Piece(PieceKind.BISHOP, Color.WHITE), 7, 5);
+        table.placePiece(new Piece(PieceKind.KNIGHT, Color.WHITE), 7, 6);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.WHITE), 7, 7);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 0, 0);
+        table.placePiece(new Piece(PieceKind.KNIGHT, Color.BLACK), 0, 1);
+        table.placePiece(new Piece(PieceKind.BISHOP, Color.BLACK), 0, 2);
+        table.placePiece(new Piece(PieceKind.QUEEN, Color.BLACK), 0, 3);
+        table.placePiece(new Piece(PieceKind.KING, Color.BLACK), 0, 4);
+        table.placePiece(new Piece(PieceKind.BISHOP, Color.BLACK), 0, 5);
+        table.placePiece(new Piece(PieceKind.KNIGHT, Color.BLACK), 0, 6);
+        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 0, 7);
         for (int i = 0; i < 8; i++) {
-            table.placePiece(new Pawn(Color.WHITE), 6, i);
-            table.placePiece(new Pawn(Color.BLACK), 1, i);
+            table.placePiece(new Piece(PieceKind.PAWN, Color.WHITE), 6, i);
+            table.placePiece(new Piece(PieceKind.PAWN, Color.BLACK), 1, i);
         }
     }
 

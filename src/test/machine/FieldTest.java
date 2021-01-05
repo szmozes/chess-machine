@@ -10,7 +10,7 @@ public class FieldTest {
 
 	@Before
 	public void setUp() {
-		field = new Field(3, 3);
+		field = new Field();
 	}
 	
 	@Test

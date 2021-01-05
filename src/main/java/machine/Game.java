@@ -36,3 +36,13 @@ public abstract class Game {
     }
 
 }
+
+enum Color {
+    BLACK,
+    WHITE
+}
+
+enum GameType {
+    BOTH_USER,
+    AGAINST_MACHINE
+}
