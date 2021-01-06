@@ -1,7 +1,7 @@
 package machine;
 
 public class TestWriter {
-    static boolean isWriting = false;
+    static boolean isWriting = true;
 
     static void writeTestTitle(String title) {
         if (isWriting) {
@@ -13,11 +13,11 @@ public class TestWriter {
         if (isWriting) {
             for (int i = 0; i < table.height; i++) {
                 for (int j = 0; j < table.width; j++) {
-                    if (table.fields[i][j].piece != null) {
-                        writePieceShortName(table.fields[i][j].piece);
+                    if (table.fields[i][j] != null) {
+                        writePieceShortName(table.fields[i][j]);
                         System.out.print("|");
                     } else {
-                        System.out.print("__|");
+                        System.out.print("_|");
                     }
                 }
                 System.out.println();
@@ -39,6 +39,30 @@ public class TestWriter {
     }
 
     private static void writePieceShortName(Piece piece) {
-        System.out.print(piece.getClass().getSimpleName().subSequence(0, 2));
+        String name;
+        switch (piece.kind) {
+            case BISHOP:
+                name = (piece.color == Color.BLACK) ? "b" : "B";
+                break;
+            case KING:
+                name = (piece.color == Color.BLACK) ? "k" : "K";
+                break;
+            case KNIGHT:
+                name = (piece.color == Color.BLACK) ? "n" : "N";
+                break;
+            case PAWN:
+                name = (piece.color == Color.BLACK) ? "p" : "P";
+                break;
+            case QUEEN:
+                name = (piece.color == Color.BLACK) ? "q" : "Q";
+                break;
+            case ROOK:
+                name = (piece.color == Color.BLACK) ? "r" : "R";
+                break;
+            default:
+                name = "";
+                break;
+        }
+        System.out.print(name);
     }
 }

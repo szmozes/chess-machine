@@ -15,7 +15,7 @@ import java.util.List;
 //	|7|_|_|_|_|_|_|_|_|	|/|a|b|c|d|e|f|g|h|
 
 public class Table {
-    final Field[][] fields;
+    final Piece[][] fields;
     int height;
     int width;
     Color whoTurns;
@@ -24,17 +24,12 @@ public class Table {
     public Table(int height, int width) {
         this.height = height;
         this.width = width;
-        fields = new Field[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                fields[i][j] = new Field();
-            }
-        }
+        fields = new Piece[height][width];
         whoTurns = Color.WHITE;
         wk = wq = bk = bq = true;
     }
 
-    public Table(Field[][] fields, int height, int width, Color whoTurns, boolean wk, boolean wq, boolean bk, boolean bq) {
+    public Table(Piece[][] fields, int height, int width, Color whoTurns, boolean wk, boolean wq, boolean bk, boolean bq) {
         this.fields = fields;
         this.height = height;
         this.width = width;
@@ -46,30 +41,31 @@ public class Table {
     }
 
     public Table copy() {
-        Field[][] newFields;
-        newFields = new Field[height][width];
+        Piece[][] newPieces;
+        newPieces = new Piece[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                newFields[i][j] = fields[i][j].copy();
+                if (fields[i][j] != null) {
+                    newPieces[i][j] = fields[i][j].copy();
+                }
             }
         }
-        return new Table(newFields, height, width, whoTurns, wk, wq, bk, bq);
+        return new Table(newPieces, height, width, whoTurns, wk, wq, bk, bq);
     }
 
     public Piece getPiece(int row, int column) {
-        return fields[row][column].piece;
+        return fields[row][column];
     }
 
     public void placePiece(Piece piece, int row, int column) {
-        Field field = fields[row][column];
-        field.setPiece(piece);
+        fields[row][column] = piece;
     }
 
     public Color getPieceColor(int row, int column) {
         if (row < 0 || row >= height || column < 0 || column >= width) {
             return null;
         }
-        Piece piece = fields[row][column].piece;
+        Piece piece = fields[row][column];
         if (piece == null) {
             return null;
         } else {
@@ -84,7 +80,7 @@ public class Table {
         double ret = 0;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                Piece piece = fields[i][j].piece;
+                Piece piece = fields[i][j];
                 if (piece != null) {
                     Color color = piece.color;
                     switch (color) {
@@ -102,27 +98,27 @@ public class Table {
     }
 
     public boolean isBQAvailable() {
-        boolean areFieldsEmpty = fields[0][1].piece == null && fields[0][2].piece == null && fields[0][3].piece == null;
+        boolean areFieldsEmpty = fields[0][1] == null && fields[0][2] == null && fields[0][3] == null;
         return bq && areFieldsEmpty;
     }
 
     public boolean isBKAvailable() {
-        boolean areFieldsEmpty = fields[0][5].piece == null && fields[0][6].piece == null;
+        boolean areFieldsEmpty = fields[0][5] == null && fields[0][6] == null;
         return bk && areFieldsEmpty;
     }
 
     public boolean isWQAvailable() {
-        boolean areFieldsEmpty = fields[7][1].piece == null && fields[7][2].piece == null && fields[7][3].piece == null;
+        boolean areFieldsEmpty = fields[7][1] == null && fields[7][2] == null && fields[7][3] == null;
         return wq && areFieldsEmpty;
     }
 
     public boolean isWKAvailable() {
-        boolean areFieldsEmpty = fields[7][5].piece == null && fields[7][6].piece == null;
+        boolean areFieldsEmpty = fields[7][5] == null && fields[7][6] == null;
         return wk && areFieldsEmpty;
     }
 
     public List<Position> getOpportunities(Position fieldPosition) {
-        Piece piece = fields[fieldPosition.row][fieldPosition.column].piece;
+        Piece piece = fields[fieldPosition.row][fieldPosition.column];
         List<Position> opportunities = new ArrayList<>();
         if (piece == null) {
             return opportunities;

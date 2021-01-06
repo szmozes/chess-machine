@@ -128,8 +128,8 @@ public class View extends JPanel {
         // pieces
         for (int i = 0; i < table.height; i++) {
             for (int j = 0; j < table.width; j++) {
-                if (table.fields[i][j].getPiece() != null) {
-                    BufferedImage pieceImage = getImageByPiece(table.fields[i][j].piece);
+                if (table.fields[i][j] != null) {
+                    BufferedImage pieceImage = getImageByPiece(table.fields[i][j]);
                     this.g.drawImage(pieceImage, j * size, i * size, size, size, null);
                 }
             }

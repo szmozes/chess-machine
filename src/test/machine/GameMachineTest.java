@@ -94,7 +94,7 @@ public class GameMachineTest {
     private void clearTable(Table table) {
         for (int i = 0; i < table.height; i++) {
             for (int j = 0; j < table.width; j++) {
-                table.fields[i][j].piece = null;
+                table.fields[i][j] = null;
             }
         }
     }

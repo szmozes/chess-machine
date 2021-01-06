@@ -97,7 +97,7 @@ public class Controller extends MouseAdapter {
     private void pickingUpAPiece(int column, int row) {
         Color pieceColor = view.table.getPieceColor(row, column);
         if (pieceColor == game.table.whoTurns) {
-            grabbed = view.table.fields[row][column].piece;
+            grabbed = view.table.fields[row][column];
             grabbedPiecePosition = new Position(row, column);
             setOpportunities(row, column);
             state = UIState.GRABBING;
