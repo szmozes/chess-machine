@@ -32,16 +32,6 @@ public class TestWriter {
         }
     }
 
-    static void writeTableCanBeStepped(Table table) {
-        for (int i = 0; i < table.height; i++) {
-            for (int j = 0; j < table.width; j++) {
-                System.out.print(table.fields[i][j].canBeSteppedOn);
-                System.out.print("  ");
-            }
-            System.out.println();
-        }
-    }
-
     static void writeString(String string) {
         if (isWriting) {
             System.out.println(string);

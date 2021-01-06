@@ -2,15 +2,12 @@ package machine;
 
 public class Field {
     Piece piece;
-    boolean canBeSteppedOn;
 
     public Field() {
-        canBeSteppedOn = false;
     }
 
-    public Field(Piece piece, boolean canBeSteppedOn) {
+    public Field(Piece piece) {
         this.piece = piece;
-        this.canBeSteppedOn = canBeSteppedOn;
     }
 
     public Field copy() {
@@ -18,7 +15,7 @@ public class Field {
         if (piece != null) {
             newPiece = piece.copy();
         }
-        return new Field(newPiece, canBeSteppedOn);
+        return new Field(newPiece);
     }
 
     public Piece getPiece() {
@@ -27,10 +24,6 @@ public class Field {
 
     public void setPiece(Piece piece) {
         this.piece = piece;
-    }
-
-    public boolean isCanBeSteppedOn() {
-        return canBeSteppedOn;
     }
 
 }

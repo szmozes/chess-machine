@@ -18,6 +18,7 @@ public class View extends JPanel {
     Controller controller;
     Table table;
     Color machineColor;
+    boolean[][] opportunities;
 
     BufferedImage blackBishopImage;
     BufferedImage blackKingImage;
@@ -88,6 +89,7 @@ public class View extends JPanel {
         machineColor = BLACK;
         addMouseListener(controller);
         setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
+        opportunities = new boolean[8][8];
     }
 
     public PieceKind askUserForPiece() {
@@ -123,33 +125,27 @@ public class View extends JPanel {
         g.setColor(java.awt.Color.BLACK);
         g.drawRect(0, 0, size * table.width - 1, size * table.height - 1);
 
-        // fields
+        // pieces
         for (int i = 0; i < table.height; i++) {
             for (int j = 0; j < table.width; j++) {
-                paintField(table.fields[i][j], i, j);
+                if (table.fields[i][j].getPiece() != null) {
+                    BufferedImage pieceImage = getImageByPiece(table.fields[i][j].piece);
+                    this.g.drawImage(pieceImage, j * size, i * size, size, size, null);
+                }
             }
         }
-    }
 
-    private void paintField(Field field, int row, int column) {
-
-        // paint the piece
-        if (field.getPiece() != null) {
-            paintPiece(field.getPiece(), row, column);
+        // opportunity signs
+        for (int i = 0; i < opportunities.length; i++){
+            for (int j = 0; j < opportunities[i].length; j++){
+                if (opportunities[i][j]) {
+                    this.g.setColor(new java.awt.Color(200, 200, 255, 255));
+                    this.g.fillOval(j * size + size * 3 / 8, i * size + size * 3 / 8, size / 4, size / 4);
+                    this.g.setColor(new java.awt.Color(0, 0, 0, 255));
+                    this.g.drawOval(j * size + size * 3 / 8, i * size + size * 3 / 8, size / 4, size / 4);
+                }
+            }
         }
-
-        // and the little sign of opportunity
-        if (field.isCanBeSteppedOn()) {
-            g.setColor(new java.awt.Color(200, 200, 255, 255));
-            g.fillOval(column * size + size * 3 / 8, row * size + size * 3 / 8, size / 4, size / 4);
-            g.setColor(new java.awt.Color(0, 0, 0, 255));
-            g.drawOval(column * size + size * 3 / 8, row * size + size * 3 / 8, size / 4, size / 4);
-        }
-    }
-
-    private void paintPiece(Piece piece, int row, int column) {
-        BufferedImage pieceImage = getImageByPiece(piece);
-        g.drawImage(pieceImage, column * size, row * size, size, size, null);
     }
 
     private static void createAndShowGUI() {
@@ -203,5 +199,4 @@ public class View extends JPanel {
             return null;
         }
     }
-
 }

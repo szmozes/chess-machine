@@ -2,6 +2,7 @@ package machine;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class Controller extends MouseAdapter {
     View view;
@@ -30,7 +31,7 @@ public class Controller extends MouseAdapter {
             if ((column < 8) && (row < 8)) { // clicked on the chess board
                 switch (state) {
                     case CHOOSING:
-                        choosingAPiece(column, row);
+                        pickingUpAPiece(column, row);
                         break;
                     case GRABBING:
                         puttingAPiece(column, row);
@@ -74,10 +75,10 @@ public class Controller extends MouseAdapter {
     }
 
     private void puttingAPiece(int column, int row) {
-        if (view.table.fields[row][column].canBeSteppedOn) {
+        if (view.opportunities[row][column]) {
             boolean pawnToFinalRank = game.userMove(grabbedPiecePosition.row, grabbedPiecePosition.column, row, column);
             grabbedPiecePosition = new Position(row, column);
-            view.table.makeFieldsUnableToBeSteppedOn();
+            resetOpportunities();
             if (pawnToFinalRank) {
                 promotingAPawn();
             } else {
@@ -86,20 +87,35 @@ public class Controller extends MouseAdapter {
                 state = UIState.CHOOSING;
             }
         } else {
-            view.table.makeFieldsUnableToBeSteppedOn();
+            resetOpportunities();
             grabbed = null;
             grabbedPiecePosition = null;
             state = UIState.CHOOSING;
         }
     }
 
-    private void choosingAPiece(int column, int row) {
+    private void pickingUpAPiece(int column, int row) {
         Color pieceColor = view.table.getPieceColor(row, column);
         if (pieceColor == game.table.whoTurns) {
             grabbed = view.table.fields[row][column].piece;
             grabbedPiecePosition = new Position(row, column);
-            game.table.setOpportunities(row, column);
+            setOpportunities(row, column);
             state = UIState.GRABBING;
+        }
+    }
+
+    private void setOpportunities(int row, int column) {
+        List<Position> opportunities = game.table.getOpportunities(new Position(row, column));
+        for (Position opp : opportunities) {
+            view.opportunities[opp.row][opp.column] = true;
+        }
+    }
+
+    private void resetOpportunities() {
+        for (int i = 0; i < view.opportunities.length; i++) {
+            for (int j = 0; j < view.opportunities[i].length; j++) {
+                view.opportunities[i][j] = false;
+            }
         }
     }
 }

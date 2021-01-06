@@ -77,21 +77,6 @@ public class Table {
         }
     }
 
-    public void setOpportunities(int row, int column) {
-        List<Position> opportunities = getOpportunities(new Position(row, column));
-        for (Position opp : opportunities) {
-            fields[opp.row][opp.column].canBeSteppedOn = true;
-        }
-    }
-
-    public void makeFieldsUnableToBeSteppedOn() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                fields[i][j].canBeSteppedOn = false;
-            }
-        }
-    }
-
     /**
      * a primitive way to get the current state (which player has more chance to win)
      */
