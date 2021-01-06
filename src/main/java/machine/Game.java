@@ -2,6 +2,7 @@ package machine;
 
 public abstract class Game {
     Table table;
+    Controller controller;
 
     public Game() {
         table = new Table(8, 8);

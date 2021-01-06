@@ -41,18 +41,21 @@ public class StandardGame extends Game {
      * @return the best move's value
      */
     public double attempt(int depth, int[] bestCoords) {
+        if (depth == 3) {
+            int a = 0;
+        }
         if (depth == 0) {
             return table.state();
         } else {
 
             // initialize the best with a safe value
-            double best = 0;
+            double bestMoveValue = 0;
             switch (table.whoTurns) {
                 case WHITE:
-                    best = -100;
+                    bestMoveValue = -100;
                     break;
                 case BLACK:
-                    best = 100;
+                    bestMoveValue = 100;
                     break;
             }
 
@@ -70,7 +73,6 @@ public class StandardGame extends Game {
                         for (Position opp : opportunities) {
 
                             // save the data for the restoration
-                            Piece knocked = table.fields[opp.row][opp.column];
                             Table initialTable = table.copy();
 
                             // make a move, and then guess how good the move was
@@ -79,14 +81,14 @@ public class StandardGame extends Game {
                             double howGood = attempt(depth - 1, new int[4]);
 
                             // make changes back
-                            table.placePiece(knocked, opp.row, opp.column);
-                            table.placePiece(analyzedPiece, i, j);
-                            switchWhoTurns();
-//                            table = initialTable;
+                            table = initialTable;
 
+                            if (depth == 3 && i == 7 && j == 3) {
+                                int a = 0;
+                            }
                             // found a better move
-                            if ((table.whoTurns == Color.WHITE && howGood > best) || (table.whoTurns == Color.BLACK && howGood < best)) {
-                                best = howGood;
+                            if ((table.whoTurns == Color.WHITE && howGood > bestMoveValue) || (table.whoTurns == Color.BLACK && howGood < bestMoveValue)) {
+                                bestMoveValue = howGood;
                                 bestCoords[0] = i;
                                 bestCoords[1] = j;
                                 bestCoords[2] = opp.row;
@@ -96,7 +98,7 @@ public class StandardGame extends Game {
                     }
                 }
             }
-            return best;
+            return bestMoveValue;
         }
     }
 
@@ -112,9 +114,6 @@ public class StandardGame extends Game {
 
     public boolean move(int fromRow, int fromColumn, int toRow, int toColumn) {
 
-//        System.out.println("\nbefore move");
-//        TestWriter.writeTable(table);
-
         Piece piece = table.fields[fromRow][fromColumn];
 
         updateCastleRights(piece, fromColumn);
@@ -122,24 +121,21 @@ public class StandardGame extends Game {
 
         table.placePiece(piece, toRow, toColumn);
         table.placePiece(null, fromRow, fromColumn);
-//        System.out.println("\nafter move");
-//        TestWriter.writeTable(table);
 
-//        // check if it's a castle move
-//        if (piece.kind == PieceKind.KING) {
-//            if (Math.abs(toColumn - fromColumn) > 1) {
-//                if (toColumn == 1) {
-//                    Piece rook = table.fields[toRow][0].piece;
-//                    table.placePiece(rook, toRow, 2);
-//                    table.placePiece(null, toRow, 0);
-//                } else if (toColumn == 6) {
-//                    Piece rook = table.fields[toRow][7].piece;
-//                    table.placePiece(rook, toRow, 5);
-//                    table.placePiece(null, toRow, 7);
-//                }
-//            }
-//        }
-
+        // check if it's a castle move
+        if (piece.kind == PieceKind.KING) {
+            if (Math.abs(toColumn - fromColumn) > 1) {
+                if (toColumn == 1) {
+                    Piece rook = table.fields[toRow][0];
+                    table.placePiece(rook, toRow, 2);
+                    table.placePiece(null, toRow, 0);
+                } else if (toColumn == 6) {
+                    Piece rook = table.fields[toRow][7];
+                    table.placePiece(rook, toRow, 5);
+                    table.placePiece(null, toRow, 7);
+                }
+            }
+        }
 
         int furthestRank = piece.color == Color.BLACK ? 7 : 0;
         return piece.kind == PieceKind.PAWN && toRow == furthestRank;

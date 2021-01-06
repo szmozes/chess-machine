@@ -53,10 +53,6 @@ public class Table {
         return new Table(newPieces, height, width, whoTurns, wk, wq, bk, bq);
     }
 
-    public Piece getPiece(int row, int column) {
-        return fields[row][column];
-    }
-
     public void placePiece(Piece piece, int row, int column) {
         fields[row][column] = piece;
     }
@@ -216,22 +212,22 @@ public class Table {
             }
         }
 
-//        // add the castling opportunities
-//        if (color == Color.BLACK) {
-//            if (isBQAvailable()) {
-//                opportunities.add(new Position{0, 2});
-//            }
-//            if (isBKAvailable()) {
-//                opportunities.add(new Position{0, 6});
-//            }
-//        } else if (color == Color.WHITE) {
-//            if (isWQAvailable()) {
-//                opportunities.add(new Position{7, 2});
-//            }
-//            if (isWKAvailable()) {
-//                opportunities.add(new Position{7, 6});
-//            }
-//        }
+        // add the castling opportunities
+        if (king.color == Color.BLACK) {
+            if (isBQAvailable()) {
+                opportunities.add(new Position(0, 2));
+            }
+            if (isBKAvailable()) {
+                opportunities.add(new Position(0, 6));
+            }
+        } else if (king.color == Color.WHITE) {
+            if (isWQAvailable()) {
+                opportunities.add(new Position(7, 2));
+            }
+            if (isWKAvailable()) {
+                opportunities.add(new Position(7, 6));
+            }
+        }
         return opportunities;
     }
 

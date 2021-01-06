@@ -87,6 +87,7 @@ public class View extends JPanel {
         table = controller.game.table;
         controller.gameType = GameType.AGAINST_MACHINE;
         machineColor = BLACK;
+        game.controller = controller;
         addMouseListener(controller);
         setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
         opportunities = new boolean[8][8];

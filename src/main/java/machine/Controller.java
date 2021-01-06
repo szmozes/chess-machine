@@ -2,6 +2,7 @@ package machine;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.List;
 
 public class Controller extends MouseAdapter {
@@ -46,9 +47,7 @@ public class Controller extends MouseAdapter {
             }
 
         }
-
         view.repaint();
-        game.wake();
     }
 
     private void promotingAPawn() {
@@ -95,9 +94,9 @@ public class Controller extends MouseAdapter {
     }
 
     private void pickingUpAPiece(int column, int row) {
-        Color pieceColor = view.table.getPieceColor(row, column);
+        Color pieceColor = game.table.getPieceColor(row, column);
         if (pieceColor == game.table.whoTurns) {
-            grabbed = view.table.fields[row][column];
+            grabbed = game.table.fields[row][column];
             grabbedPiecePosition = new Position(row, column);
             setOpportunities(row, column);
             state = UIState.GRABBING;
@@ -113,9 +112,7 @@ public class Controller extends MouseAdapter {
 
     private void resetOpportunities() {
         for (int i = 0; i < view.opportunities.length; i++) {
-            for (int j = 0; j < view.opportunities[i].length; j++) {
-                view.opportunities[i][j] = false;
-            }
+            Arrays.fill(view.opportunities[i], false);
         }
     }
 }

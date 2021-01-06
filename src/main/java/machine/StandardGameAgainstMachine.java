@@ -23,17 +23,18 @@ public class StandardGameAgainstMachine extends StandardGame {
     public boolean userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 
         boolean pawnReached = move(fromRow, fromColumn, toRow, toColumn);
-
-        // here we should switch a flag what a computing thread watches or something like that
-        if (table.whoTurns == machineColor) {
-            makeMove(4);
-        }
+        wake();
         return pawnReached;
     }
 
     public void wake() {
         if (table.whoTurns == machineColor) {
-            makeMove(4);
+            new Thread(() -> {
+                controller.view.table = table.copy();
+                makeMove(4);
+                controller.view.table = table;
+                controller.view.repaint();
+            }).start();
         }
     }
 }
