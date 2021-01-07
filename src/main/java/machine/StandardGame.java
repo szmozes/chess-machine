@@ -6,26 +6,7 @@ public class StandardGame extends Game {
 
     public StandardGame() {
         super();
-        table.placePiece(new Piece(PieceKind.ROOK, Color.WHITE), 7, 0);
-        table.placePiece(new Piece(PieceKind.KNIGHT, Color.WHITE), 7, 1);
-        table.placePiece(new Piece(PieceKind.BISHOP, Color.WHITE), 7, 2);
-        table.placePiece(new Piece(PieceKind.QUEEN, Color.WHITE), 7, 3);
-        table.placePiece(new Piece(PieceKind.KING, Color.WHITE), 7, 4);
-        table.placePiece(new Piece(PieceKind.BISHOP, Color.WHITE), 7, 5);
-        table.placePiece(new Piece(PieceKind.KNIGHT, Color.WHITE), 7, 6);
-        table.placePiece(new Piece(PieceKind.ROOK, Color.WHITE), 7, 7);
-        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 0, 0);
-        table.placePiece(new Piece(PieceKind.KNIGHT, Color.BLACK), 0, 1);
-        table.placePiece(new Piece(PieceKind.BISHOP, Color.BLACK), 0, 2);
-        table.placePiece(new Piece(PieceKind.QUEEN, Color.BLACK), 0, 3);
-        table.placePiece(new Piece(PieceKind.KING, Color.BLACK), 0, 4);
-        table.placePiece(new Piece(PieceKind.BISHOP, Color.BLACK), 0, 5);
-        table.placePiece(new Piece(PieceKind.KNIGHT, Color.BLACK), 0, 6);
-        table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 0, 7);
-        for (int i = 0; i < 8; i++) {
-            table.placePiece(new Piece(PieceKind.PAWN, Color.WHITE), 6, i);
-            table.placePiece(new Piece(PieceKind.PAWN, Color.BLACK), 1, i);
-        }
+        standardLineUp();
     }
 
     /**
@@ -41,78 +22,61 @@ public class StandardGame extends Game {
      * @return the best move's value
      */
     public double attempt(int depth, int[] bestCoords) {
-        if (depth == 3) {
-            int a = 0;
-        }
         if (depth == 0) {
             return table.state();
-        } else {
+        }
 
-            // initialize the best with a safe value
-            double bestMoveValue = 0;
-            switch (table.whoTurns) {
-                case WHITE:
-                    bestMoveValue = -100;
-                    break;
-                case BLACK:
-                    bestMoveValue = 100;
-                    break;
-            }
+        // initialize the best with a safe value
+        double bestMoveValue = 0;
+        switch (table.whoTurns) {
+            case WHITE:
+                bestMoveValue = -100;
+                break;
+            case BLACK:
+                bestMoveValue = 100;
+                break;
+        }
 
-            // to find the best possible move, we search the whole table for movable pieces
-            for (int i = 0; i < table.height; i++) {
-                for (int j = 0; j < table.width; j++) {
+        // to find the best possible move, we search the whole table for movable pieces
+        for (int i = 0; i < table.height; i++) {
+            for (int j = 0; j < table.width; j++) {
 
-                    // found a movable piece, so we will try all of its opportunities
-                    Color pieceColor = getPieceColor(i, j);
-                    if (pieceColor == table.whoTurns) {
-                        Piece analyzedPiece = table.fields[i][j];
-                        List<Position> opportunities = table.getOpportunities(new Position(i, j));
+                // if it's not our piece, we go to the next one
+                if (table.whoTurns != getPieceColor(i, j)) {
+                    continue;
+                }
+                List<Position> opportunities = table.getOpportunities(new Position(i, j));
 
-                        // go through all of its opportunities
-                        for (Position opp : opportunities) {
+                // go through all of its opportunities
+                for (Position opp : opportunities) {
 
-                            // save the data for the restoration
-                            Table initialTable = table.copy();
+                    // save the data for the restoration
+                    Table initialTable = table.copy();
+//                    controller.view.table = table;
 
-                            // make a move, and then guess how good the move was
-                            boolean pawnPromoted = move(i, j, opp.row, opp.column);
-//                            table.fields[opp.row][opp.column].piece = new Piece(PieceKind.QUEEN, table.whoTurns);
-                            double howGood = attempt(depth - 1, new int[4]);
+                    // make a move, and then guess how good the move was
+                    move(i, j, opp.row, opp.column);
+                    boolean pawnPromoted = false;
+                    double howGood = attempt(depth - 1, new int[4]);
 
-                            // make changes back
-                            table = initialTable;
+                    // make changes back
+                    table = initialTable;
 
-                            if (depth == 3 && i == 7 && j == 3) {
-                                int a = 0;
-                            }
-                            // found a better move
-                            if ((table.whoTurns == Color.WHITE && howGood > bestMoveValue) || (table.whoTurns == Color.BLACK && howGood < bestMoveValue)) {
-                                bestMoveValue = howGood;
-                                bestCoords[0] = i;
-                                bestCoords[1] = j;
-                                bestCoords[2] = opp.row;
-                                bestCoords[3] = opp.column;
-                            }
-                        }
+                    // found a better move
+                    if ((table.whoTurns == Color.WHITE && howGood > bestMoveValue) || (table.whoTurns == Color.BLACK && howGood < bestMoveValue)) {
+                        bestMoveValue = howGood;
+                        bestCoords[0] = i;
+                        bestCoords[1] = j;
+                        bestCoords[2] = opp.row;
+                        bestCoords[3] = opp.column;
                     }
                 }
             }
-            return bestMoveValue;
         }
+        return bestMoveValue;
     }
 
-    private Color getPieceColor(int i, int j) {
-        Color pieceColor = null;
-        if (i >= 0 && i < table.height && j >= 0 && j < table.width) {
-            if (table.fields[i][j] != null) {
-                pieceColor = table.fields[i][j].color;
-            }
-        }
-        return pieceColor;
-    }
-
-    public boolean move(int fromRow, int fromColumn, int toRow, int toColumn) {
+    public void move(int fromRow, int fromColumn, int toRow, int toColumn) {
 
         Piece piece = table.fields[fromRow][fromColumn];
 
@@ -136,9 +100,60 @@ public class StandardGame extends Game {
                 }
             }
         }
+    }
 
-        int furthestRank = piece.color == Color.BLACK ? 7 : 0;
-        return piece.kind == PieceKind.PAWN && toRow == furthestRank;
+    public void userMovePromoting(int fromRow, int fromCol, int toRow, int toCol, PieceKind chosenKind) {
+        Piece pawnToPromote = table.fields[fromRow][fromCol];
+        move(fromRow, fromCol, toRow, toCol);
+        Piece newPiece = null;
+        switch (chosenKind) {
+            case BISHOP:
+                newPiece = new Piece(PieceKind.BISHOP, pawnToPromote.color);
+                break;
+            case KNIGHT:
+                newPiece = new Piece(PieceKind.KNIGHT, pawnToPromote.color);
+                break;
+            case QUEEN:
+                newPiece = new Piece(PieceKind.QUEEN, pawnToPromote.color);
+                break;
+            case ROOK:
+                newPiece = new Piece(PieceKind.ROOK, pawnToPromote.color);
+                break;
+        }
+        table.placePiece(newPiece, toRow, toCol);
+    }
+
+    private Color getPieceColor(int i, int j) {
+        Color pieceColor = null;
+        if (i >= 0 && i < table.height && j >= 0 && j < table.width) {
+            if (table.fields[i][j] != null) {
+                pieceColor = table.fields[i][j].color;
+            }
+        }
+        return pieceColor;
+    }
+
+    private void standardLineUp() {
+        table.fields[0][0] = new Piece(PieceKind.ROOK, Color.BLACK);
+        table.fields[0][1] = new Piece(PieceKind.KNIGHT, Color.BLACK);
+        table.fields[0][2] = new Piece(PieceKind.BISHOP, Color.BLACK);
+        table.fields[0][3] = new Piece(PieceKind.QUEEN, Color.BLACK);
+        table.fields[0][4] = new Piece(PieceKind.KING, Color.BLACK);
+        table.fields[0][5] = new Piece(PieceKind.BISHOP, Color.BLACK);
+        table.fields[0][6] = new Piece(PieceKind.KNIGHT, Color.BLACK);
+        table.fields[0][7] = new Piece(PieceKind.ROOK, Color.BLACK);
+        table.fields[7][0] = new Piece(PieceKind.ROOK, Color.WHITE);
+        table.fields[7][1] = new Piece(PieceKind.KNIGHT, Color.WHITE);
+        table.fields[7][2] = new Piece(PieceKind.BISHOP, Color.WHITE);
+        table.fields[7][3] = new Piece(PieceKind.QUEEN, Color.WHITE);
+        table.fields[7][4] = new Piece(PieceKind.KING, Color.WHITE);
+        table.fields[7][5] = new Piece(PieceKind.BISHOP, Color.WHITE);
+        table.fields[7][6] = new Piece(PieceKind.KNIGHT, Color.WHITE);
+        table.fields[7][7] = new Piece(PieceKind.ROOK, Color.WHITE);
+        for (int i = 0; i < 8; i++) {
+            table.fields[1][i] = new Piece(PieceKind.PAWN, Color.BLACK);
+            table.fields[6][i] = new Piece(PieceKind.PAWN, Color.WHITE);
+        }
     }
 
     private void updateCastleRights(Piece movedPiece, int fromColumn) {

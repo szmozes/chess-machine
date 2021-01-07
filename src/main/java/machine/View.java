@@ -3,11 +3,10 @@ package machine;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import static machine.Color.BLACK;
 
 public class View extends JPanel {
     Graphics g;
@@ -17,7 +16,6 @@ public class View extends JPanel {
     MenuHandler handleMenu; // execute the clicked menu item
     Controller controller;
     Table table;
-    Color machineColor;
     boolean[][] opportunities;
 
     BufferedImage blackBishopImage;
@@ -36,30 +34,13 @@ public class View extends JPanel {
     public View() {
         rightMenu = new MenuItems();
         handleMenu = new MenuHandler();
+        size = 60;
+        menuWidth = rightMenu.getMenuWidth(size);
+        opportunities = new boolean[8][8];
+        setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
     }
 
-    public static void main(String[] args) {
-        createAndShowGUI();
-    }
-
-    private JMenuBar createMenu() {
-
-        // menu bar
-        JMenuBar menuBar = new JMenuBar();
-
-        // first menu
-        JMenu menu = new JMenu("Game");
-        menuBar.add(menu);
-
-        // first menu items
-        JMenuItem menuItem = new JMenuItem("New Game");
-        menuItem.addActionListener(arg0 -> newGame());
-        menu.add(menuItem);
-
-        return menuBar;
-    }
-
-    public void init() {
+    public void init(Controller controller) {
         String imagePath = "images";
 
         try {
@@ -76,21 +57,14 @@ public class View extends JPanel {
             whiteQueenImage = ImageIO.read(new File(imagePath, "white_queen.png"));
             whiteRookImage = ImageIO.read(new File(imagePath, "white_rook.png"));
         } catch (IOException e) {
-            System.out.println("some of the pictures couldn't be loaded");
+            System.out.println("some of the images couldn't be loaded");
         }
-
-        size = 60;
-        menuWidth = rightMenu.getMenuWidth(size);
-        Game game = new StandardGameAgainstMachine(BLACK);
-        controller = new Controller(this, game);
-        controller.game = game;
+        this.controller = controller;
         table = controller.game.table;
-        controller.gameType = GameType.AGAINST_MACHINE;
-        machineColor = BLACK;
-        game.controller = controller;
+        for (MouseListener ml : getMouseListeners()) {
+            removeMouseListener(ml);
+        }
         addMouseListener(controller);
-        setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
-        opportunities = new boolean[8][8];
     }
 
     public PieceKind askUserForPiece() {
@@ -137,8 +111,8 @@ public class View extends JPanel {
         }
 
         // opportunity signs
-        for (int i = 0; i < opportunities.length; i++){
-            for (int j = 0; j < opportunities[i].length; j++){
+        for (int i = 0; i < opportunities.length; i++) {
+            for (int j = 0; j < opportunities[i].length; j++) {
                 if (opportunities[i][j]) {
                     this.g.setColor(new java.awt.Color(200, 200, 255, 255));
                     this.g.fillOval(j * size + size * 3 / 8, i * size + size * 3 / 8, size / 4, size / 4);
@@ -149,32 +123,22 @@ public class View extends JPanel {
         }
     }
 
-    private static void createAndShowGUI() {
-        View view = new View();
-        view.init();
-
-        JFrame f = new JFrame("Chess Program");
-        f.setJMenuBar(view.createMenu());
-        f.setContentPane(view);
-        f.pack();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-    }
-
     private void newGame() {
-        Object[] colors = {BLACK, Color.WHITE};
+        Object[] colors = {Color.BLACK, Color.WHITE};
         Color chosenColor = (Color) JOptionPane.showInputDialog(null,
                 "Choose color you want to play with", "Choosing color",
                 JOptionPane.QUESTION_MESSAGE, null, colors, colors[0]);
         if (chosenColor == null) {
             chosenColor = Color.WHITE;
         }
-        if (controller.gameType == GameType.BOTH_USER) {
-            controller.game = new StandardGameAgainstMachine(Color.values()[1 - chosenColor.ordinal()]);
-        }
+        StandardGameAgainstMachine newGame = new StandardGameAgainstMachine(Color.values()[1 - chosenColor.ordinal()]);
+        controller.init(this, newGame);
+        newGame.init(controller);
+        init(controller);
+        newGame.wake();
     }
 
-    private BufferedImage getRead(String imagePath, String filename) {
+    private BufferedImage readImage(String imagePath, String filename) {
         try {
             return ImageIO.read(new File(imagePath, filename));
         } catch (IOException e) {
@@ -184,20 +148,66 @@ public class View extends JPanel {
     }
 
     private BufferedImage getImageByPiece(Piece piece) {
-        if (piece.kind == PieceKind.BISHOP) {
-            return piece.color == BLACK ? blackBishopImage : whiteBishopImage;
-        } else if (piece.kind == PieceKind.KING) {
-            return piece.color == BLACK ? blackKingImage : whiteKingImage;
-        } else if (piece.kind == PieceKind.KNIGHT) {
-            return piece.color == BLACK ? blackKnightImage : whiteKnightImage;
-        } else if (piece.kind == PieceKind.PAWN) {
-            return piece.color == BLACK ? blackPawnImage : whitePawnImage;
-        } else if (piece.kind == PieceKind.QUEEN) {
-            return piece.color == BLACK ? blackQueenImage : whiteQueenImage;
-        } else if (piece.kind == PieceKind.ROOK) {
-            return piece.color == BLACK ? blackRookImage : whiteRookImage;
-        } else {
+        if (piece == null) {
             return null;
         }
+        switch (piece.kind) {
+            case BISHOP:
+                return piece.color == Color.BLACK ? blackBishopImage : whiteBishopImage;
+            case KING:
+                return piece.color == Color.BLACK ? blackKingImage : whiteKingImage;
+            case KNIGHT:
+                return piece.color == Color.BLACK ? blackKnightImage : whiteKnightImage;
+            case PAWN:
+                return piece.color == Color.BLACK ? blackPawnImage : whitePawnImage;
+            case QUEEN:
+                return piece.color == Color.BLACK ? blackQueenImage : whiteQueenImage;
+            case ROOK:
+                return piece.color == Color.BLACK ? blackRookImage : whiteRookImage;
+            default:
+                return null;
+        }
+    }
+
+    private JMenuBar createMenu() {
+
+        // menu bar
+        JMenuBar menuBar = new JMenuBar();
+
+        // first menu
+        JMenu menu = new JMenu("Game");
+        menuBar.add(menu);
+
+        // first menu's items
+        JMenuItem menuItem = new JMenuItem("New Game");
+        menuItem.addActionListener(arg0 -> newGame());
+        menu.add(menuItem);
+
+        return menuBar;
+    }
+
+    private class NewGameDialog extends JFrame {
+        GameType gameType;
+        Color machineColor;
+    }
+
+    private static void createAndShowGUI() {
+        View view = new View();
+        Game game = new StandardGame();
+        Controller controller = new Controller();
+        controller.init(view, game);
+        game.init(controller);
+        view.init(controller);
+
+        JFrame f = new JFrame("Chess Program");
+        f.setJMenuBar(view.createMenu());
+        f.setContentPane(view);
+        f.pack();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        createAndShowGUI();
     }
 }

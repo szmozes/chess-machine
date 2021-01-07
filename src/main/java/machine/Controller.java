@@ -10,14 +10,18 @@ public class Controller extends MouseAdapter {
     Game game;
     GameType gameType;
     Piece grabbed;
-    Position grabbedPiecePosition;
+    Position grabbedPos;
     UIState state;
 
-    public Controller(View view, Game game) {
+    public Controller() {
+    }
+
+    public void init(View view, Game game) {
         this.view = view;
         this.game = game;
+        gameType = GameType.AGAINST_MACHINE;
         grabbed = null;
-        grabbedPiecePosition = null;
+        grabbedPos = null;
         state = UIState.CHOOSING;
     }
 
@@ -32,13 +36,12 @@ public class Controller extends MouseAdapter {
             if ((column < 8) && (row < 8)) { // clicked on the chess board
                 switch (state) {
                     case CHOOSING:
-                        pickingUpAPiece(column, row);
+                        pickingUpAPiece(row, column);
                         break;
                     case GRABBING:
-                        puttingAPiece(column, row);
+                        puttingAPiece(row, column);
                         break;
                     case PROMOTING:     // right now it's unreachable
-                        promotingAPawn();
                         break;
                 }
             } else {    // clicked out of the chess board
@@ -50,54 +53,27 @@ public class Controller extends MouseAdapter {
         view.repaint();
     }
 
-    private void promotingAPawn() {
-        PieceKind newPieceKind = view.askUserForPiece();
-        Piece newPiece = null;
-        switch (newPieceKind) {
-            case BISHOP:
-                newPiece = new Piece(PieceKind.BISHOP, grabbed.color);
-                break;
-            case KNIGHT:
-                newPiece = new Piece(PieceKind.KNIGHT, grabbed.color);
-                break;
-            case QUEEN:
-                newPiece = new Piece(PieceKind.QUEEN, grabbed.color);
-                break;
-            case ROOK:
-                newPiece = new Piece(PieceKind.ROOK, grabbed.color);
-                break;
+    private void puttingAPiece(int row, int column) {
+        if (view.opportunities[row][column]) {
+            boolean isFurthestRank = grabbed.color == Color.BLACK ? row == 7 : row == 0;
+            if (grabbed.kind == PieceKind.PAWN && isFurthestRank) {
+                PieceKind chosenKind = view.askUserForPiece();
+                game.userMovePromoting(grabbedPos.row, grabbedPos.column, row, column, chosenKind);
+            } else {
+                game.userMove(grabbedPos.row, grabbedPos.column, row, column);
+            }
         }
-        game.table.placePiece(newPiece, grabbedPiecePosition.row, grabbedPiecePosition.column);
+        resetOpportunities();
         grabbed = null;
-        grabbedPiecePosition = null;
+        grabbedPos = null;
         state = UIState.CHOOSING;
     }
 
-    private void puttingAPiece(int column, int row) {
-        if (view.opportunities[row][column]) {
-            boolean pawnToFinalRank = game.userMove(grabbedPiecePosition.row, grabbedPiecePosition.column, row, column);
-            grabbedPiecePosition = new Position(row, column);
-            resetOpportunities();
-            if (pawnToFinalRank) {
-                promotingAPawn();
-            } else {
-                grabbed = null;
-                grabbedPiecePosition = null;
-                state = UIState.CHOOSING;
-            }
-        } else {
-            resetOpportunities();
-            grabbed = null;
-            grabbedPiecePosition = null;
-            state = UIState.CHOOSING;
-        }
-    }
-
-    private void pickingUpAPiece(int column, int row) {
+    private void pickingUpAPiece(int row, int column) {
         Color pieceColor = game.table.getPieceColor(row, column);
         if (pieceColor == game.table.whoTurns) {
             grabbed = game.table.fields[row][column];
-            grabbedPiecePosition = new Position(row, column);
+            grabbedPos = new Position(row, column);
             setOpportunities(row, column);
             state = UIState.GRABBING;
         }

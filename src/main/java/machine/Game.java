@@ -8,7 +8,7 @@ public abstract class Game {
         table = new Table(8, 8);
     }
 
-    public abstract boolean move(int fromRow, int fromColumn, int toRow, int toColumn);
+    public abstract void move(int fromRow, int fromColumn, int toRow, int toColumn);
 
     public void switchWhoTurns() {
         switch (table.whoTurns) {
@@ -27,15 +27,21 @@ public abstract class Game {
      * @param fromColumn    the column where the moved piece was
      * @param toRow         the row where the moved piece goes
      * @param toColumn      the column where the moved piece goes
-     * @return              true if the pawn reached the final rank
      */
-    public boolean userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
-        return move(fromRow, fromColumn, toRow, toColumn);
+    public void userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
+        move(fromRow, fromColumn, toRow, toColumn);
     }
 
     public void wake() {
     }
 
+    public void init(Controller controller) {
+        this.controller = controller;
+    }
+
+    public void userMovePromoting(int fromRow, int fromCol, int toRow, int toCol, PieceKind chosenKind) {
+
+    }
 }
 
 enum Color {

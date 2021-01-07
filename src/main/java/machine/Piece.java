@@ -9,11 +9,6 @@ public class Piece {
         this.color = color;
     }
 
-    public Piece(Piece ref) {
-        this.kind = ref.kind;
-        this.color = ref.color;
-    }
-
     public double getValue() {
         if (kind == PieceKind.BISHOP) {
             return 3;
