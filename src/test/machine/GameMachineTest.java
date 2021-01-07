@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class GameMachineTest {
     Table table;
-    StandardGameAgainstMachine game;
+    GameAgainstMachine game;
 
     //  A - Ally
     //  E - Enemy
@@ -24,7 +24,7 @@ public class GameMachineTest {
 
     @Before
     public void setUp() {
-        game = new StandardGameAgainstMachine();
+        game = new GameAgainstMachine();
         table = game.table;
         clearTable(table);
     }

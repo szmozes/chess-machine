@@ -53,6 +53,15 @@ public class Controller extends MouseAdapter {
         view.repaint();
     }
 
+    /**
+     * creates a copy of the table, sets it as the view's model, and repaints the canvas
+     * @param table the view paints based on this
+     */
+    public void refreshView(Table table) {
+        view.table = table.copy();
+        view.repaint();
+    }
+
     private void puttingAPiece(int row, int column) {
         if (view.opportunities[row][column]) {
             boolean isFurthestRank = grabbed.color == Color.BLACK ? row == 7 : row == 0;

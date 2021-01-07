@@ -132,7 +132,7 @@ public class View extends JPanel {
         if (chosenColor == null) {
             chosenColor = Color.WHITE;
         }
-        StandardGameAgainstMachine newGame = new StandardGameAgainstMachine(Color.values()[1 - chosenColor.ordinal()]);
+        GameAgainstMachine newGame = new GameAgainstMachine(Color.values()[1 - chosenColor.ordinal()]);
         controller.init(this, newGame);
         newGame.init(controller);
         init(controller);
@@ -194,11 +194,12 @@ public class View extends JPanel {
 
     private static void createAndShowGUI() {
         View view = new View();
-        Game game = new StandardGame();
+        Game game = new Game();
         Controller controller = new Controller();
         controller.init(view, game);
         game.init(controller);
         view.init(controller);
+        view.handleMenu.controller = controller;
 
         JFrame f = new JFrame("Chess Program");
         f.setJMenuBar(view.createMenu());

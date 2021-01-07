@@ -1,6 +1,7 @@
 package machine;
 
 public class MenuHandler {
+    Controller controller;
 
     public MenuHandler() {
         // TODO Auto-generated constructor stub
@@ -32,6 +33,7 @@ public class MenuHandler {
                 buttonFastBackward();
                 break;
             case 2:
+                controller.game.undoMove();
                 buttonBackward();
                 break;
             case 3:

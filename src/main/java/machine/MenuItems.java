@@ -2,21 +2,15 @@ package machine;
 
 import java.awt.*;
 
-class ControlButton {
-    int x0, y0;            // button top-left coordinates
-    int xSize, ySize;    // button sizes
-    int buttonID;        // button ID number
-}
-
 // draw menu items and return the serial number of the selected item
 public class MenuItems {
 
-    int menuWidth;        // Width  of the menu at the right of the board (in pixels)
-    int menuSquare = 4;    // Width  of the menu = 4 * squareSize (4 chessboard square)
-    int squareSize;        // Size of one chessboard square in pixels
-    int menuButton = 4;    // forward, backward, fast-forward, fast-backward
-    int x0, y0;            // menu top-left coordinates
-    int xSize, ySize;    // menu sizes
+    int menuWidth;          // Width  of the menu at the right of the board (in pixels)
+    int menuSquare = 4;     // Width  of the menu = 4 * squareSize (4 chessboard square)
+    int squareSize;         // Size of one chessboard square in pixels
+    int menuButton = 4;     // forward, backward, fast-forward, fast-backward
+    int x0, y0;             // menu top-left coordinates
+    int xSize, ySize;       // menu sizes
     ControlButton buttonFastBackward;
     ControlButton buttonBackward;
     ControlButton buttonForward;
@@ -73,7 +67,7 @@ public class MenuItems {
         return (int) (x);
     }
 
-    public void drawLineButton(Graphics g, ControlButton lineButton, int x1, int y1, int x2, int y2) {
+    private void drawLineButton(Graphics g, ControlButton lineButton, int x1, int y1, int x2, int y2) {
         g.setColor(java.awt.Color.BLACK);
         x1 = convertCoordinate(x1, lineButton.x0, lineButton.xSize);
         y1 = convertCoordinate(y1, lineButton.y0, lineButton.ySize);
@@ -82,7 +76,7 @@ public class MenuItems {
         g.drawLine(x1, y1, x2, y2);
     }
 
-    public void drawTriangle(Graphics g, ControlButton lineButton, int x1, int y1, int x2, int y2, int x3, int y3) {
+    private void drawTriangle(Graphics g, ControlButton lineButton, int x1, int y1, int x2, int y2, int x3, int y3) {
         g.setColor(java.awt.Color.BLACK);
         x1 = convertCoordinate(x1, lineButton.x0, lineButton.xSize);
         y1 = convertCoordinate(y1, lineButton.y0, lineButton.ySize);
@@ -144,4 +138,10 @@ public class MenuItems {
         this.ySize = squareSize / 2;
         paintButtons(g);
     }
+}
+
+class ControlButton {
+    int x0, y0;         // button top-left coordinates
+    int xSize, ySize;   // button sizes
+    int buttonID;       // button ID number
 }
