@@ -23,10 +23,11 @@ public abstract class Game {
 
     /**
      * Processes a user move
-     * @param fromRow       the row where the moved piece was
-     * @param fromColumn    the column where the moved piece was
-     * @param toRow         the row where the moved piece goes
-     * @param toColumn      the column where the moved piece goes
+     *
+     * @param fromRow    the row where the moved piece was
+     * @param fromColumn the column where the moved piece was
+     * @param toRow      the row where the moved piece goes
+     * @param toColumn   the column where the moved piece goes
      */
     public void userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
         move(fromRow, fromColumn, toRow, toColumn);

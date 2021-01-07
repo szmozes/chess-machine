@@ -24,10 +24,10 @@ public class TestWriter {
             }
             System.out.println("who turns: " + table.whoTurns);
             System.out.print("castles: ");
-            if(table.bq) System.out.print("bq ");
-            if(table.bk) System.out.print("bk ");
-            if(table.wq) System.out.print("wq ");
-            if(table.wk) System.out.print("wk ");
+            if (table.bq) System.out.print("bq ");
+            if (table.bk) System.out.print("bk ");
+            if (table.wq) System.out.print("wq ");
+            if (table.wk) System.out.print("wk ");
             System.out.println();
         }
     }

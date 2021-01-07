@@ -94,8 +94,8 @@ public class MenuItems {
         int[] y = {y1, y2, y3};
         g.fillPolygon(x, y, 3);
 
-		g.setColor(new java.awt.Color(0, 0, 0));
-		g.drawPolygon(x, y, 3);
+        g.setColor(new java.awt.Color(0, 0, 0));
+        g.drawPolygon(x, y, 3);
 
     }
 

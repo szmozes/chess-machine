@@ -89,9 +89,9 @@ public class StandardGame extends Game {
         // check if it's a castle move
         if (piece.kind == PieceKind.KING) {
             if (Math.abs(toColumn - fromColumn) > 1) {
-                if (toColumn == 1) {
+                if (toColumn == 2) {
                     Piece rook = table.fields[toRow][0];
-                    table.placePiece(rook, toRow, 2);
+                    table.placePiece(rook, toRow, 3);
                     table.placePiece(null, toRow, 0);
                 } else if (toColumn == 6) {
                     Piece rook = table.fields[toRow][7];

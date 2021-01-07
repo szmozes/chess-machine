@@ -65,6 +65,7 @@ public class View extends JPanel {
             removeMouseListener(ml);
         }
         addMouseListener(controller);
+        repaint();
     }
 
     public PieceKind askUserForPiece() {
@@ -186,7 +187,7 @@ public class View extends JPanel {
         return menuBar;
     }
 
-    private class NewGameDialog extends JFrame {
+    private static class NewGameDialog extends JFrame {
         GameType gameType;
         Color machineColor;
     }
