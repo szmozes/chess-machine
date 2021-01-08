@@ -31,7 +31,7 @@ public class View extends JPanel {
     BufferedImage whiteRookImage;
 
     public View() {
-        rightMenu = new RightSideMenu();
+        rightMenu = new RightSideMenu(this);
         handleMenu = new MenuHandler();
         size = 60;
         opportunities = new boolean[8][8];
@@ -82,8 +82,8 @@ public class View extends JPanel {
         this.g = g;
 
         // recalculate the current size of a chessboard square
-        size = rightMenu.calculateSquareSize(this.getWidth(), this.getHeight());
-        rightMenu.paint(g);
+        calculateSquareSize();
+        rightMenu.paint();
 
         // background
         for (int i = 0; i < table.height; i++) {
@@ -120,6 +120,13 @@ public class View extends JPanel {
                 }
             }
         }
+    }
+
+    private void calculateSquareSize() {
+        // max size of a chessboard square in pixels
+        int xSize = this.getWidth() / (8 + rightMenu.widthInBoardSquare); // 8 chessboard square + 4 space width for the menu
+        int ySize = this.getHeight() / 8;
+        size = Math.min(xSize, ySize);  // squareSize: size of a chessboard square
     }
 
     private void newGame() {
