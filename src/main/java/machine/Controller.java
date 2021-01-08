@@ -101,9 +101,3 @@ public class Controller extends MouseAdapter {
         }
     }
 }
-
-enum UIState {
-    CHOOSING,
-    GRABBING,
-    PROMOTING
-}
