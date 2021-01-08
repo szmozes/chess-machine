@@ -4,7 +4,6 @@ import java.awt.*;
 
 // draw menu items and return the serial number of the selected item
 public class MenuItems {
-
     int menuWidth;          // Width  of the menu at the right of the board (in pixels)
     int menuSquare = 4;     // Width  of the menu = 4 * squareSize (4 chessboard square)
     int squareSize;         // Size of one chessboard square in pixels
@@ -39,23 +38,24 @@ public class MenuItems {
         return this.squareSize;
     }
 
-    public boolean buttonClicked(ControlButton button1, int xPixel, int yPixel) {
-        // check whether mouse click is between button coordinates
-        boolean bClicked;
-        bClicked = (button1.x0 <= xPixel) && (xPixel <= (button1.x0 + button1.xSize)) &&
-                (button1.y0 <= yPixel) && (yPixel <= (button1.y0 + button1.ySize));
-
-        return bClicked;
+    /**
+     * check whether mouse click is between button coordinates
+     */
+    public boolean isButtonClicked(ControlButton button, int xPixel, int yPixel) {
+        return (button.x0 <= xPixel) &&
+                (xPixel <= (button.x0 + button.xSize)) &&
+                (button.y0 <= yPixel) &&
+                (yPixel <= (button.y0 + button.ySize));
     }
 
-    public int getButtonID(int xPixel, int yPixel) {
-        int bID = 0; // the ID of the clicked button (0: no button clicked)
-        if (buttonClicked(buttonFastBackward, xPixel, yPixel)) bID = buttonFastBackward.buttonID;
-        if (buttonClicked(buttonBackward, xPixel, yPixel)) bID = buttonBackward.buttonID;
-        if (buttonClicked(buttonForward, xPixel, yPixel)) bID = buttonForward.buttonID;
-        if (buttonClicked(buttonFastForward, xPixel, yPixel)) bID = buttonFastForward.buttonID;
+    public ControlButtonType getButtonType(int xPixel, int yPixel) {
+        ControlButtonType buttonType = null; // the ID of the clicked button (0: no button clicked)
+        if (isButtonClicked(buttonFastBackward, xPixel, yPixel)) buttonType = buttonFastBackward.type;
+        if (isButtonClicked(buttonBackward, xPixel, yPixel)) buttonType = buttonBackward.type;
+        if (isButtonClicked(buttonForward, xPixel, yPixel)) buttonType = buttonForward.type;
+        if (isButtonClicked(buttonFastForward, xPixel, yPixel)) buttonType = buttonFastForward.type;
 
-        return bID;
+        return buttonType;
     }
 
     public int convertCoordinate(int x1, int x0, int xSize) {
@@ -93,12 +93,12 @@ public class MenuItems {
 
     }
 
-    public void button1(Graphics g, ControlButton button1, int x0, int y0, int xSize, int ySize, int bID) {
+    public void button1(Graphics g, ControlButton button1, int x0, int y0, int xSize, int ySize, ControlButtonType controlButtonType) {
         button1.x0 = x0;
         button1.y0 = y0;
         button1.xSize = xSize;
         button1.ySize = ySize;
-        button1.buttonID = bID;
+        button1.type = controlButtonType;
         g.setColor(new java.awt.Color(225, 225, 170));
         g.fillRect(x0, y0, xSize, ySize);
     }
@@ -107,7 +107,7 @@ public class MenuItems {
         g.setColor(java.awt.Color.BLACK);
         int buttonSize = this.xSize / menuButton;
 
-        button1(g, buttonFastBackward, this.x0, this.y0, buttonSize, this.ySize, 1);
+        button1(g, buttonFastBackward, this.x0, this.y0, buttonSize, this.ySize, ControlButtonType.FAST_BACKWARD);
         drawLineButton(g, buttonFastBackward, 19, 30, 19, 70);
         drawLineButton(g, buttonFastBackward, 20, 30, 20, 70);
         drawLineButton(g, buttonFastBackward, 21, 30, 21, 70);
@@ -116,13 +116,13 @@ public class MenuItems {
         drawLineButton(g, buttonFastBackward, 50, 50, 80, 70);
         drawTriangle(g, buttonFastBackward, 50, 50, 80, 30, 80, 70);
 
-        button1(g, buttonBackward, this.x0 + buttonSize, this.y0, buttonSize, this.ySize, 2);
+        button1(g, buttonBackward, this.x0 + buttonSize, this.y0, buttonSize, this.ySize, ControlButtonType.BACKWARD);
         drawTriangle(g, buttonBackward, 35, 50, 65, 30, 65, 70);
 
-        button1(g, buttonForward, this.x0 + 2 * buttonSize, this.y0, buttonSize, this.ySize, 3);
+        button1(g, buttonForward, this.x0 + 2 * buttonSize, this.y0, buttonSize, this.ySize, ControlButtonType.FORWARD);
         drawTriangle(g, buttonForward, 35, 30, 65, 50, 35, 70);
 
-        button1(g, buttonFastForward, this.x0 + 3 * buttonSize, this.y0, buttonSize, this.ySize, 4);
+        button1(g, buttonFastForward, this.x0 + 3 * buttonSize, this.y0, buttonSize, this.ySize, ControlButtonType.FAST_FORWARD);
         drawLineButton(g, buttonFastForward, 80, 30, 80, 70);
         drawLineButton(g, buttonFastForward, 81, 30, 81, 70);
         drawLineButton(g, buttonFastForward, 82, 30, 82, 70);
@@ -143,5 +143,23 @@ public class MenuItems {
 class ControlButton {
     int x0, y0;         // button top-left coordinates
     int xSize, ySize;   // button sizes
-    int buttonID;       // button ID number
+    ControlButtonType type;
+
+    public ControlButton() {
+    }
+
+    public ControlButton(int x0, int y0, int xSize, int ySize, ControlButtonType type) {
+        this.x0 = x0;
+        this.y0 = y0;
+        this.xSize = xSize;
+        this.ySize = ySize;
+        this.type = type;
+    }
+}
+
+enum ControlButtonType {
+    FAST_BACKWARD,
+    BACKWARD,
+    FORWARD,
+    FAST_FORWARD
 }

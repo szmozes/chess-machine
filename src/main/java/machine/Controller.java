@@ -19,7 +19,7 @@ public class Controller extends MouseAdapter {
     public void init(View view, Game game) {
         this.view = view;
         this.game = game;
-        gameType = GameType.AGAINST_MACHINE;
+        gameType = GameType.BOTH_USER;
         grabbed = null;
         grabbedPos = null;
         state = UIState.CHOOSING;
@@ -45,8 +45,8 @@ public class Controller extends MouseAdapter {
                         break;
                 }
             } else {    // clicked out of the chess board
-                int clickedButton = view.rightMenu.getButtonID(e.getX(), e.getY());
-                view.handleMenu.buttonHandler(clickedButton);
+                ControlButtonType clickedButtonType = view.rightMenu.getButtonType(e.getX(), e.getY());
+                view.handleMenu.buttonHandler(clickedButtonType);
             }
 
         }

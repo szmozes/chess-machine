@@ -8,38 +8,34 @@ public class MenuHandler {
     }
 
     public void buttonFastBackward() {
-        System.out.println();
-        System.out.print("Fast Backward button clicked");
+        System.out.println("Fast Backward button clicked");
     }
 
     public void buttonBackward() {
-        System.out.println();
-        System.out.print("Backward button clicked");
+        System.out.println("Backward button clicked");
+        controller.game.undoMove();
     }
 
     public void buttonForward() {
-        System.out.println();
-        System.out.print("Forward button clicked");
+        System.out.println("Forward button clicked");
     }
 
     public void buttonFastForward() {
-        System.out.println();
-        System.out.print("Fast Forward button clicked");
+        System.out.println("Fast Forward button clicked");
     }
 
-    public void buttonHandler(int buttonId) {
-        switch (buttonId) {
-            case 1:
+    public void buttonHandler(ControlButtonType controlButtonType) {
+        switch (controlButtonType) {
+            case FAST_BACKWARD:
                 buttonFastBackward();
                 break;
-            case 2:
-                controller.game.undoMove();
+            case BACKWARD:
                 buttonBackward();
                 break;
-            case 3:
+            case FORWARD:
                 buttonForward();
                 break;
-            case 4:
+            case FAST_FORWARD:
                 buttonFastForward();
                 break;
         }
