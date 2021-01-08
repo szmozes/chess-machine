@@ -3,23 +3,22 @@ package machine;
 import java.awt.*;
 import java.awt.Color;
 
-// draw menu items and return the serial number of the selected item
 public class RightSideMenu {
 
     static class ControlButton {
-        int x0, y0;         // top-left coordinates
+        int x0, y0;
         int buttonWidth, buttonHeight;
         ControlButtonType type;
 
         public ControlButton() {
         }
 
-        public void init(int x0, int y0, int buttonWidth, int buttonHeight, ControlButtonType controlButtonType) {
+        public void init(int x0, int y0, int buttonWidth, int buttonHeight, ControlButtonType type) {
             this.x0 = x0;
             this.y0 = y0;
             this.buttonWidth = buttonWidth;
             this.buttonHeight = buttonHeight;
-            this.type = controlButtonType;
+            this.type = type;
         }
 
         public boolean isButtonClicked(int xPixel, int yPixel) {
@@ -34,25 +33,52 @@ public class RightSideMenu {
             g.fillRect(this.x0, this.y0, this.buttonWidth, this.buttonHeight);
             switch (type) {
                 case FAST_BACKWARD:
-                    drawLineOnButton(g, 19, 30, 19, 70);
-                    drawLineOnButton(g, 20, 30, 20, 70);
-                    drawLineOnButton(g, 21, 30, 21, 70);
-                    drawTriangleOnButton(g, 20, 50, 50, 30, 50, 70);
-                    drawTriangleOnButton(g, 50, 50, 80, 30, 80, 70);
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{19, 21, 21, 19},
+                            new int[]{30, 30, 70, 70}
+                    );
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{20, 50, 50},
+                            new int[]{50, 30, 70}
+                    );
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{50, 80, 80},
+                            new int[]{50, 30, 70}
+                    );
                     break;
                 case BACKWARD:
-                    drawTriangleOnButton(g, 35, 50, 65, 30, 65, 70);
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{35, 65, 65},
+                            new int[]{50, 30, 70}
+                    );
                     break;
                 case FORWARD:
-                    drawTriangleOnButton(g, 35, 30, 65, 50, 35, 70);
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{35, 65, 35},
+                            new int[]{30, 50, 70}
+                    );
                     break;
                 case FAST_FORWARD:
-                    drawLineOnButton(g, 80, 30, 80, 70);
-                    drawLineOnButton(g, 81, 30, 81, 70);
-                    drawLineOnButton(g, 82, 30, 82, 70);
-                    drawLineOnButton(g, 83, 30, 83, 70);
-                    drawTriangleOnButton(g, 20, 30, 50, 50, 20, 70);
-                    drawTriangleOnButton(g, 50, 30, 80, 50, 50, 70);
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{80, 83, 83, 80},
+                            new int[]{30, 30, 70, 70}
+                    );
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{20, 50, 20},
+                            new int[]{30, 50, 70}
+                    );
+                    drawPolygonOnButton(
+                            g,
+                            new int[]{50, 80, 50},
+                            new int[]{30, 50, 70}
+                    );
                     break;
             }
         }
@@ -75,21 +101,6 @@ public class RightSideMenu {
             g.drawLine(x1, y1, x2, y2);
         }
 
-        private void drawTriangleOnButton(Graphics g, int x1, int y1, int x2, int y2, int x3, int y3) {
-            x1 = convertCoordinate(x1, this.buttonWidth, this.x0);
-            y1 = convertCoordinate(y1, this.buttonHeight, this.y0);
-            x2 = convertCoordinate(x2, this.buttonWidth, this.x0);
-            y2 = convertCoordinate(y2, this.buttonHeight, this.y0);
-            x3 = convertCoordinate(x3, this.buttonWidth, this.x0);
-            y3 = convertCoordinate(y3, this.buttonHeight, this.y0);
-
-            int[] x = {x1, x2, x3};
-            int[] y = {y1, y2, y3};
-            g.setColor(Color.BLACK);
-            g.fillPolygon(x, y, 3);
-            g.drawPolygon(x, y, 3);
-        }
-
         private void drawPolygonOnButton(Graphics g, int[] xPoints, int[] yPoints) {
             for (int i = 0; i < xPoints.length; i++) {
                 xPoints[i] = convertCoordinate(xPoints[i], this.buttonWidth, this.x0);
@@ -99,6 +110,7 @@ public class RightSideMenu {
             }
             g.setColor(Color.BLACK);
             g.fillPolygon(xPoints, yPoints, xPoints.length);
+            g.drawPolygon(xPoints, yPoints, xPoints.length);
         }
     }
 

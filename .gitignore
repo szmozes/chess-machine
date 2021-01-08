@@ -3,6 +3,7 @@
 .project
 .classpath
 .settings
+*.jardesc
 /out/
 /bin/
 META-INF/
