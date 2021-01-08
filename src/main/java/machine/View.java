@@ -10,10 +10,9 @@ import java.io.IOException;
 
 public class View extends JPanel {
     Graphics g;
-    int size;               // length of a field in pixels
-    int menuWidth;          // menu width (at the right of the board)
-    MenuItems rightMenu;    // menu at the right of the chessboard
-    MenuHandler handleMenu; // execute the clicked menu item
+    int size;                   // length of a field in pixels
+    RightSideMenu rightMenu;    // menu at the right of the chessboard
+    MenuHandler handleMenu;     // execute the clicked menu item
     Controller controller;
     Table table;
     boolean[][] opportunities;
@@ -32,12 +31,11 @@ public class View extends JPanel {
     BufferedImage whiteRookImage;
 
     public View() {
-        rightMenu = new MenuItems();
+        rightMenu = new RightSideMenu();
         handleMenu = new MenuHandler();
         size = 60;
-        menuWidth = rightMenu.getMenuWidth(size);
         opportunities = new boolean[8][8];
-        setPreferredSize(new Dimension(8 * size + menuWidth, 8 * size));
+        setPreferredSize(new Dimension((8 + rightMenu.widthInBoardSquare) * size, 8 * size));
     }
 
     public void init(Controller controller) {
@@ -84,7 +82,7 @@ public class View extends JPanel {
         this.g = g;
 
         // recalculate the current size of a chessboard square
-        size = rightMenu.getSquareSize(this.getWidth(), this.getHeight());
+        size = rightMenu.calculateSquareSize(this.getWidth(), this.getHeight());
         rightMenu.paint(g);
 
         // background
