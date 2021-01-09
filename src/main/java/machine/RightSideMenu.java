@@ -114,6 +114,43 @@ public class RightSideMenu {
         }
     }
 
+    class MenuHandler {
+
+        public void onBtnClicked(ControlButtonType controlButtonType) {
+            switch (controlButtonType) {
+                case FAST_BACKWARD:
+                    buttonFastBackward();
+                    break;
+                case BACKWARD:
+                    buttonBackward();
+                    break;
+                case FORWARD:
+                    buttonForward();
+                    break;
+                case FAST_FORWARD:
+                    buttonFastForward();
+                    break;
+            }
+        }
+
+        private void buttonFastBackward() {
+            System.out.println("Fast Backward button clicked");
+        }
+
+        private void buttonBackward() {
+            System.out.println("Backward button clicked");
+            view.controller.game.undoMove();
+        }
+
+        private void buttonForward() {
+            System.out.println("Forward button clicked");
+        }
+
+        private void buttonFastForward() {
+            System.out.println("Fast Forward button clicked");
+        }
+    }
+
     View view;
     int widthInBoardSquare = 4;     // Width  of the menu = 4 * squareSize (4 chessboard square)
     int buttonCount = 4;     // forward, backward, fast-forward, fast-backward
@@ -122,6 +159,7 @@ public class RightSideMenu {
     ControlButton buttonBackward;
     ControlButton buttonForward;
     ControlButton buttonFastForward;
+    MenuHandler handler;
 
     public RightSideMenu(View view) {
         this.view = view;
@@ -129,6 +167,7 @@ public class RightSideMenu {
         buttonBackward = new ControlButton();
         buttonForward = new ControlButton();
         buttonFastForward = new ControlButton();
+        handler = new MenuHandler();
     }
 
     public ControlButtonType getButtonType(int xPixel, int yPixel) {

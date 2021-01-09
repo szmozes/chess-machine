@@ -46,9 +46,8 @@ public class Controller extends MouseAdapter {
                 }
             } else {    // clicked out of the chess board
                 ControlButtonType clickedButtonType = view.rightMenu.getButtonType(e.getX(), e.getY());
-                view.handleMenu.buttonHandler(clickedButtonType);
+                view.rightMenu.handler.onBtnClicked(clickedButtonType);
             }
-
         }
         view.repaint();
     }

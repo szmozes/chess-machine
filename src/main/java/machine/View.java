@@ -11,8 +11,7 @@ import java.io.IOException;
 public class View extends JPanel {
     Graphics g;
     int size;                   // length of a field in pixels
-    RightSideMenu rightMenu;    // menu at the right of the chessboard
-    MenuHandler handleMenu;     // execute the clicked menu item
+    RightSideMenu rightMenu;    // menu at the right side of the chessboard
     Controller controller;
     Table table;
     boolean[][] opportunities;
@@ -32,7 +31,6 @@ public class View extends JPanel {
 
     public View() {
         rightMenu = new RightSideMenu(this);
-        handleMenu = new MenuHandler();
         size = 60;
         opportunities = new boolean[8][8];
         setPreferredSize(new Dimension((8 + rightMenu.widthInBoardSquare) * size, 8 * size));
@@ -204,7 +202,6 @@ public class View extends JPanel {
         controller.init(view, game);
         game.init(controller);
         view.init(controller);
-        view.handleMenu.controller = controller;
 
         JFrame f = new JFrame("Chess Program");
         f.setJMenuBar(view.createMenu());
