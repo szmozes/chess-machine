@@ -37,8 +37,9 @@ public class GameMachineTest {
         table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 2, 6);
         TestWriter.writeTable(table);
         int[] bestMove = new int[4];
-        double state = game.attempt(2, bestMove);
-        TestWriter.writeString("best move value: " + state + " from: [" + bestMove[0] + ", " + bestMove[1] + "] to: [" + bestMove[2] + ", " + bestMove[3] + "]\n");
+        double state = game.findBestMove(2, bestMove, table);
+        TestWriter.writeString("best move: " + " [" + bestMove[0] + ", " + bestMove[1] + "] -> [" + bestMove[2] + ", " + bestMove[3] + "]");
+        TestWriter.writeString("\tvalue: " + state);
         TestWriter.writeString(game.table.whoTurns + " turns");
     }
 

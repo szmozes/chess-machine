@@ -18,32 +18,6 @@ public class Game {
         standardLineUp();
     }
 
-    public void move(int fromRow, int fromColumn, int toRow, int toColumn) {
-
-        Piece piece = table.fields[fromRow][fromColumn];
-
-        table.placePiece(piece, toRow, toColumn);
-        table.placePiece(null, fromRow, fromColumn);
-
-        // check if it's a castle move
-        if (piece.kind == PieceKind.KING) {
-            if (Math.abs(toColumn - fromColumn) > 1) {
-                if (toColumn == 2) {
-                    Piece rook = table.fields[toRow][0];
-                    table.placePiece(rook, toRow, 3);
-                    table.placePiece(null, toRow, 0);
-                } else if (toColumn == 6) {
-                    Piece rook = table.fields[toRow][7];
-                    table.placePiece(rook, toRow, 5);
-                    table.placePiece(null, toRow, 7);
-                }
-            }
-        }
-
-        updateCastleRights(piece, fromColumn);
-        switchWhoTurns();
-    }
-
     /**
      * Processes a user move
      *
@@ -54,7 +28,7 @@ public class Game {
      */
     public void userMove(int fromRow, int fromColumn, int toRow, int toColumn) {
         history.add(table.copy());
-        move(fromRow, fromColumn, toRow, toColumn);
+        table.move(fromRow, fromColumn, toRow, toColumn);
         controller.refreshView(table);
         wake();
     }
@@ -71,7 +45,7 @@ public class Game {
     public void userMovePromoting(int fromRow, int fromCol, int toRow, int toCol, PieceKind chosenKind) {
         history.add(table.copy());
         Piece pawnToPromote = table.fields[fromRow][fromCol];
-        move(fromRow, fromCol, toRow, toCol);
+        table.move(fromRow, fromCol, toRow, toCol);
         Piece newPiece = null;
         switch (chosenKind) {
             case BISHOP:
@@ -100,18 +74,21 @@ public class Game {
      * note for the usage: it will try to move the turning player's pieces,
      * so we will have to set the 'whoTurns'
      *
-     * @param depth      the recursion's depth
-     * @param bestCoords this parameter gets set as the best move's coordinates
+     * @param depth          the recursion's depth
+     * @param referenceTable the function calculates the state value based on this
+     * @param alpha          the caller's best move's value for white
+     * @param beta           the caller's best move's value for black
      * @return the best move's value
      */
-    public double attempt(int depth, int[] bestCoords) {
+    public static double stateValue(int depth, Table referenceTable, double alpha, double beta) {
+        Table copiedTable = referenceTable.copy();
         if (depth == 0) {
-            return table.state();
+            return copiedTable.state();
         }
 
         // initialize the best with a safe value
         double bestMoveValue = 0;
-        switch (table.whoTurns) {
+        switch (copiedTable.whoTurns) {
             case WHITE:
                 bestMoveValue = -100;
                 break;
@@ -121,37 +98,43 @@ public class Game {
         }
 
         // to find the best possible move, we search the whole table for movable pieces
-        for (int i = 0; i < table.height; i++) {
-            for (int j = 0; j < table.width; j++) {
+        for (int i = 0; i < copiedTable.height; i++) {
+            for (int j = 0; j < copiedTable.width; j++) {
 
                 // if it's not our piece, we go to the next one
-                if (table.whoTurns != getPieceColor(i, j)) {
+                if (copiedTable.whoTurns != copiedTable.getPieceColor(i, j)) {
                     continue;
                 }
-                List<Position> opportunities = table.getOpportunities(new Position(i, j));
+                List<Position> opportunities = copiedTable.getOpportunities(new Position(i, j));
 
                 // go through all of its opportunities
                 for (Position opp : opportunities) {
 
                     // save the data for the restoration
-                    Table initialTable = table.copy();
+                    Table initialTable = copiedTable.copy();
 //                    controller.view.table = table;
 
                     // make a move, and then guess how good the move was
-                    move(i, j, opp.row, opp.column);
-                    boolean pawnPromoted = false;
-                    double howGood = attempt(depth - 1, new int[4]);
+                    copiedTable.move(i, j, opp.row, opp.column);
+                    double attemptValue = stateValue(depth - 1, copiedTable, alpha, beta);
 
                     // make changes back
-                    table = initialTable;
+                    copiedTable = initialTable;
 
-                    // found a better move
-                    if ((table.whoTurns == Color.WHITE && howGood > bestMoveValue) || (table.whoTurns == Color.BLACK && howGood < bestMoveValue)) {
-                        bestMoveValue = howGood;
-                        bestCoords[0] = i;
-                        bestCoords[1] = j;
-                        bestCoords[2] = opp.row;
-                        bestCoords[3] = opp.column;
+                    // alpha-beta pruning
+                    if (copiedTable.whoTurns == Color.WHITE) {
+                        bestMoveValue = Math.max(bestMoveValue, attemptValue);
+                        if (bestMoveValue >= beta) {
+                            return bestMoveValue;
+                        }
+                        alpha = Math.max(alpha, attemptValue);
+                    }
+                    if (copiedTable.whoTurns == Color.BLACK) {
+                        bestMoveValue = Math.min(bestMoveValue, attemptValue);
+                        if (bestMoveValue <= alpha) {
+                            return bestMoveValue;
+                        }
+                        beta = Math.min(beta, bestMoveValue);
                     }
                 }
             }
@@ -171,28 +154,7 @@ public class Game {
         controller.refreshView(table);
     }
 
-    public void switchWhoTurns() {
-        switch (table.whoTurns) {
-            case BLACK:
-                table.whoTurns = Color.WHITE;
-                break;
-            case WHITE:
-                table.whoTurns = Color.BLACK;
-                break;
-        }
-    }
-
     public void wake() {
-    }
-
-    private Color getPieceColor(int i, int j) {
-        Color pieceColor = null;
-        if (i >= 0 && i < table.height && j >= 0 && j < table.width) {
-            if (table.fields[i][j] != null) {
-                pieceColor = table.fields[i][j].color;
-            }
-        }
-        return pieceColor;
     }
 
     private void standardLineUp() {
@@ -215,32 +177,6 @@ public class Game {
         for (int i = 0; i < 8; i++) {
             table.fields[1][i] = new Piece(PieceKind.PAWN, Color.BLACK);
             table.fields[6][i] = new Piece(PieceKind.PAWN, Color.WHITE);
-        }
-    }
-
-    private void updateCastleRights(Piece movedPiece, int fromColumn) {
-        if (movedPiece.kind == PieceKind.KING) {
-            if (movedPiece.color == Color.BLACK) {
-                table.bk = false;
-                table.bq = false;
-            } else if (movedPiece.color == Color.WHITE) {
-                table.wk = false;
-                table.wq = false;
-            }
-        } else if (movedPiece.kind == PieceKind.ROOK) {
-            if (movedPiece.color == Color.BLACK) {
-                if (fromColumn == 0) {
-                    table.bq = false;
-                } else if (fromColumn == 7) {
-                    table.bk = false;
-                }
-            } else if (movedPiece.color == Color.WHITE) {
-                if (fromColumn == 0) {
-                    table.wq = false;
-                } else if (fromColumn == 7) {
-                    table.wk = false;
-                }
-            }
         }
     }
 }

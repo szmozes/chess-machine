@@ -16,8 +16,7 @@ import java.util.List;
 
 public class Table {
     final Piece[][] fields;
-    int height;
-    int width;
+    int height, width;
     Color whoTurns;
     boolean wk, wq, bk, bq;    // how the players can castle
 
@@ -69,6 +68,17 @@ public class Table {
         }
     }
 
+    public void switchWhoTurns() {
+        switch (whoTurns) {
+            case BLACK:
+                whoTurns = Color.WHITE;
+                break;
+            case WHITE:
+                whoTurns = Color.BLACK;
+                break;
+        }
+    }
+
     /**
      * a primitive way to get the current state (which player has more chance to win)
      */
@@ -77,20 +87,47 @@ public class Table {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 Piece piece = fields[i][j];
-                if (piece != null) {
-                    Color color = piece.color;
-                    switch (color) {
-                        case WHITE:
-                            ret += piece.getValue();
-                            break;
-                        case BLACK:
-                            ret -= piece.getValue();
-                            break;
-                    }
+                if (piece == null) {
+                    continue;
+                }
+                Color color = piece.color;
+                switch (color) {
+                    case WHITE:
+                        ret += piece.getValue();
+                        break;
+                    case BLACK:
+                        ret -= piece.getValue();
+                        break;
                 }
             }
         }
         return ret;
+    }
+
+    public void move(int fromRow, int fromColumn, int toRow, int toColumn) {
+
+        Piece piece = fields[fromRow][fromColumn];
+
+        placePiece(piece, toRow, toColumn);
+        placePiece(null, fromRow, fromColumn);
+
+        // check if it's a castle move
+        if (piece.kind == PieceKind.KING) {
+            if (Math.abs(toColumn - fromColumn) > 1) {
+                if (toColumn == 2) {
+                    Piece rook = fields[toRow][0];
+                    placePiece(rook, toRow, 3);
+                    placePiece(null, toRow, 0);
+                } else if (toColumn == 6) {
+                    Piece rook = fields[toRow][7];
+                    placePiece(rook, toRow, 5);
+                    placePiece(null, toRow, 7);
+                }
+            }
+        }
+
+        updateCastleRights(piece, fromColumn);
+        switchWhoTurns();
     }
 
     public boolean isBQAvailable() {
@@ -111,6 +148,32 @@ public class Table {
     public boolean isWKAvailable() {
         boolean areFieldsEmpty = fields[7][5] == null && fields[7][6] == null;
         return wk && areFieldsEmpty;
+    }
+
+    private void updateCastleRights(Piece movedPiece, int fromColumn) {
+        if (movedPiece.kind == PieceKind.KING) {
+            if (movedPiece.color == Color.BLACK) {
+                bk = false;
+                bq = false;
+            } else if (movedPiece.color == Color.WHITE) {
+                wk = false;
+                wq = false;
+            }
+        } else if (movedPiece.kind == PieceKind.ROOK) {
+            if (movedPiece.color == Color.BLACK) {
+                if (fromColumn == 0) {
+                    bq = false;
+                } else if (fromColumn == 7) {
+                    bk = false;
+                }
+            } else if (movedPiece.color == Color.WHITE) {
+                if (fromColumn == 0) {
+                    wq = false;
+                } else if (fromColumn == 7) {
+                    wk = false;
+                }
+            }
+        }
     }
 
     public List<Position> getOpportunities(Position fieldPosition) {

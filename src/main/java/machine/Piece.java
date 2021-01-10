@@ -10,18 +10,19 @@ public class Piece {
     }
 
     public double getValue() {
-        if (kind == PieceKind.BISHOP) {
-            return 3;
-        } else if (kind == PieceKind.KING) {
-            return 50;
-        } else if (kind == PieceKind.KNIGHT) {
-            return 3;
-        } else if (kind == PieceKind.PAWN) {
-            return 1;
-        } else if (kind == PieceKind.QUEEN) {
-            return 9;
-        } else if (kind == PieceKind.ROOK) {
-            return 5;
+        switch (kind) {
+            case BISHOP:
+                return 3;
+            case KING:
+                return 50;
+            case KNIGHT:
+                return 3;
+            case PAWN:
+                return 1;
+            case QUEEN:
+                return 9;
+            case ROOK:
+                return 5;
         }
         return 0;
     }
