@@ -9,7 +9,7 @@ public class TableTest {
 
     @Before
     public void setUp() {
-        table = new Table(8, 8);
+        table = new Table();
     }
 
     @Test

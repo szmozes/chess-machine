@@ -20,15 +20,14 @@ public class GameAgainstMachine extends Game {
         table.move(bestCoords[0], bestCoords[1], bestCoords[2], bestCoords[3]);
     }
 
-    public static double findBestMove(int depth, int[] bestCoords, Table referenceTable) {
-        Table copiedTable = referenceTable.copy();
+    public static double findBestMove(int depth, int[] bestCoords, Table table) {
         if (depth == 0) {
-            return copiedTable.state();
+            return table.eval();
         }
 
         // initialize the best with a safe value
         double bestMoveValue = 0;
-        switch (copiedTable.whoTurns) {
+        switch (table.whoTurns) {
             case WHITE:
                 bestMoveValue = -100;
                 break;
@@ -38,31 +37,29 @@ public class GameAgainstMachine extends Game {
         }
 
         // to find the best possible move, we search the whole table for movable pieces
-        for (int i = 0; i < copiedTable.height; i++) {
-            for (int j = 0; j < copiedTable.width; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
 
                 // if it's not our piece, we go to the next one
-                if (copiedTable.whoTurns != copiedTable.getPieceColor(i, j)) {
+                if (table.whoTurns != table.getPieceColor(i, j)) {
                     continue;
                 }
-                List<Position> opportunities = copiedTable.getOpportunities(new Position(i, j));
+                List<Position> opportunities = table.getOpportunities(new Position(i, j));
 
                 // go through all of its opportunities
                 for (Position opp : opportunities) {
 
-                    // save the data for the restoration
-                    Table initialTable = copiedTable.copy();
+                    // make a copy so the initial doesn't change
+                    Table copiedTable = table.copy();
 //                    controller.view.table = table;
 
                     // make a move, and then guess how good the move was
                     copiedTable.move(i, j, opp.row, opp.column);
                     double howGood = stateValue(depth - 1, copiedTable, -1000, 1000);
 
-                    // make changes back
-                    copiedTable = initialTable;
-
                     // found a better move
-                    if ((copiedTable.whoTurns == Color.WHITE && howGood > bestMoveValue) || (copiedTable.whoTurns == Color.BLACK && howGood < bestMoveValue)) {
+                    if ((table.whoTurns == Color.WHITE && howGood > bestMoveValue) ||
+                            (table.whoTurns == Color.BLACK && howGood < bestMoveValue)) {
                         bestMoveValue = howGood;
                         bestCoords[0] = i;
                         bestCoords[1] = j;

@@ -16,22 +16,17 @@ import java.util.List;
 
 public class Table {
     final Piece[][] fields;
-    int height, width;
     Color whoTurns;
     boolean wk, wq, bk, bq;    // how the players can castle
 
-    public Table(int height, int width) {
-        this.height = height;
-        this.width = width;
-        fields = new Piece[height][width];
+    public Table() {
+        fields = new Piece[8][8];
         whoTurns = Color.WHITE;
         wk = wq = bk = bq = true;
     }
 
-    public Table(Piece[][] fields, int height, int width, Color whoTurns, boolean wk, boolean wq, boolean bk, boolean bq) {
+    public Table(Piece[][] fields, Color whoTurns, boolean wk, boolean wq, boolean bk, boolean bq) {
         this.fields = fields;
-        this.height = height;
-        this.width = width;
         this.whoTurns = whoTurns;
         this.wk = wk;
         this.wq = wq;
@@ -41,15 +36,11 @@ public class Table {
 
     public Table copy() {
         Piece[][] newPieces;
-        newPieces = new Piece[height][width];
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (fields[i][j] != null) {
-                    newPieces[i][j] = fields[i][j].copy();
-                }
-            }
+        newPieces = new Piece[8][8];
+        for (int i = 0; i < 8; i++) {
+            System.arraycopy(fields[i], 0, newPieces[i], 0, 8);
         }
-        return new Table(newPieces, height, width, whoTurns, wk, wq, bk, bq);
+        return new Table(newPieces, whoTurns, wk, wq, bk, bq);
     }
 
     public void placePiece(Piece piece, int row, int column) {
@@ -57,7 +48,7 @@ public class Table {
     }
 
     public Color getPieceColor(int row, int column) {
-        if (row < 0 || row >= height || column < 0 || column >= width) {
+        if (row < 0 || row >= 8 || column < 0 || column >= 8) {
             return null;
         }
         Piece piece = fields[row][column];
@@ -68,24 +59,13 @@ public class Table {
         }
     }
 
-    public void switchWhoTurns() {
-        switch (whoTurns) {
-            case BLACK:
-                whoTurns = Color.WHITE;
-                break;
-            case WHITE:
-                whoTurns = Color.BLACK;
-                break;
-        }
-    }
-
     /**
-     * a primitive way to get the current state (which player has more chance to win)
+     * a primitive way to guess which player has more chance to win
      */
-    public double state() {
+    public double eval() {
         double ret = 0;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 Piece piece = fields[i][j];
                 if (piece == null) {
                     continue;
@@ -130,24 +110,15 @@ public class Table {
         switchWhoTurns();
     }
 
-    public boolean isBQAvailable() {
-        boolean areFieldsEmpty = fields[0][1] == null && fields[0][2] == null && fields[0][3] == null;
-        return bq && areFieldsEmpty;
-    }
-
-    public boolean isBKAvailable() {
-        boolean areFieldsEmpty = fields[0][5] == null && fields[0][6] == null;
-        return bk && areFieldsEmpty;
-    }
-
-    public boolean isWQAvailable() {
-        boolean areFieldsEmpty = fields[7][1] == null && fields[7][2] == null && fields[7][3] == null;
-        return wq && areFieldsEmpty;
-    }
-
-    public boolean isWKAvailable() {
-        boolean areFieldsEmpty = fields[7][5] == null && fields[7][6] == null;
-        return wk && areFieldsEmpty;
+    private void switchWhoTurns() {
+        switch (whoTurns) {
+            case BLACK:
+                whoTurns = Color.WHITE;
+                break;
+            case WHITE:
+                whoTurns = Color.BLACK;
+                break;
+        }
     }
 
     private void updateCastleRights(Piece movedPiece, int fromColumn) {
@@ -174,6 +145,26 @@ public class Table {
                 }
             }
         }
+    }
+
+    private boolean isBQAvailable() {
+        boolean areFieldsEmpty = fields[0][1] == null && fields[0][2] == null && fields[0][3] == null;
+        return bq && areFieldsEmpty;
+    }
+
+    private boolean isBKAvailable() {
+        boolean areFieldsEmpty = fields[0][5] == null && fields[0][6] == null;
+        return bk && areFieldsEmpty;
+    }
+
+    private boolean isWQAvailable() {
+        boolean areFieldsEmpty = fields[7][1] == null && fields[7][2] == null && fields[7][3] == null;
+        return wq && areFieldsEmpty;
+    }
+
+    private boolean isWKAvailable() {
+        boolean areFieldsEmpty = fields[7][5] == null && fields[7][6] == null;
+        return wk && areFieldsEmpty;
     }
 
     public List<Position> getOpportunities(Position fieldPosition) {
@@ -263,7 +254,7 @@ public class Table {
             int oppCol = position.column + colPos[i];
 
             // first, we have to make sure we don't exceed the table's edges
-            if (oppRow < 0 || oppRow >= height || oppCol < 0 || oppCol >= width) {
+            if (oppRow < 0 || oppRow >= 8 || oppCol < 0 || oppCol >= 8) {
                 // in case we exceed, we ignore the opportunity, and go to the next one
                 continue;
             }
@@ -311,7 +302,7 @@ public class Table {
             int oppCol = position.column + colPos[i];
 
             // first, we have to make sure we don't exceed the table's edges
-            if (oppRow < 0 || oppRow >= height || oppCol < 0 || oppCol >= width) {
+            if (oppRow < 0 || oppRow >= 8 || oppCol < 0 || oppCol >= 8) {
                 // in case we exceed, we ignore the opportunity, and go to the next one
                 continue;
             }
@@ -368,7 +359,7 @@ public class Table {
                 }
 
                 // capture to east
-                if (col + 1 < width) {
+                if (col + 1 < 8) {
                     Color eastColor = getPieceColor(row - 1, col + 1);
                     if (eastColor != null && eastColor != pawn.color) {
                         Position opportunity = new Position(row - 1, col + 1);
@@ -379,7 +370,7 @@ public class Table {
             case BLACK:
 
                 // make sure not to exceed the table edge
-                if (row + 1 >= height) {
+                if (row + 1 >= 8) {
                     return opportunities;
                 }
 
@@ -409,7 +400,7 @@ public class Table {
                 }
 
                 // capture to east
-                if (col + 1 < width) {
+                if (col + 1 < 8) {
                     Color eastColor = getPieceColor(row + 1, col + 1);
                     if (eastColor != null && eastColor != pawn.color) {
                         Position opportunity = new Position(row + 1, col + 1);
@@ -467,7 +458,7 @@ public class Table {
             int oppCol = position.column;
 
             // make sure not to exceed the edges
-            if (oppRow >= height) {
+            if (oppRow >= 8) {
                 break;
             }
 
@@ -537,7 +528,7 @@ public class Table {
             int oppCol = position.column + i;
 
             // make sure not to exceed the edges
-            if (oppCol >= width) {
+            if (oppCol >= 8) {
                 break;
             }
 
@@ -607,7 +598,7 @@ public class Table {
             int oppCol = position.column + i;
 
             // make sure not to exceed the edges
-            if (oppRow < 0 || oppCol >= width) {
+            if (oppRow < 0 || oppCol >= 8) {
                 break;
             }
 
@@ -642,7 +633,7 @@ public class Table {
             int oppCol = position.column - i;
 
             // make sure not to exceed the edges
-            if (oppRow >= height || oppCol < 0) {
+            if (oppRow >= 8 || oppCol < 0) {
                 break;
             }
 
@@ -677,7 +668,7 @@ public class Table {
             int oppCol = position.column + i;
 
             // make sure not to exceed the edges
-            if (oppRow >= height || oppCol >= width) {
+            if (oppRow >= 8 || oppCol >= 8) {
                 break;
             }
 

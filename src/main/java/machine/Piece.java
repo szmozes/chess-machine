@@ -26,8 +26,4 @@ public class Piece {
         }
         return 0;
     }
-
-    public Piece copy() {
-        return new Piece(kind, color);
-    }
 }

@@ -11,8 +11,8 @@ public class TestWriter {
 
     static void writeTable(Table table) {
         if (isWriting) {
-            for (int i = 0; i < table.height; i++) {
-                for (int j = 0; j < table.width; j++) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
                     if (table.fields[i][j] != null) {
                         writePieceShortName(table.fields[i][j]);
                         System.out.print("|");

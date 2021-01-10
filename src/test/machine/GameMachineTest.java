@@ -37,7 +37,7 @@ public class GameMachineTest {
         table.placePiece(new Piece(PieceKind.ROOK, Color.BLACK), 2, 6);
         TestWriter.writeTable(table);
         int[] bestMove = new int[4];
-        double state = game.findBestMove(2, bestMove, table);
+        double state = GameAgainstMachine.findBestMove(2, bestMove, table);
         TestWriter.writeString("best move: " + " [" + bestMove[0] + ", " + bestMove[1] + "] -> [" + bestMove[2] + ", " + bestMove[3] + "]");
         TestWriter.writeString("\tvalue: " + state);
         TestWriter.writeString(game.table.whoTurns + " turns");
@@ -93,8 +93,8 @@ public class GameMachineTest {
     }
 
     private void clearTable(Table table) {
-        for (int i = 0; i < table.height; i++) {
-            for (int j = 0; j < table.width; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 table.fields[i][j] = null;
             }
         }

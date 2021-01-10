@@ -84,8 +84,8 @@ public class View extends JPanel {
         rightMenu.paint();
 
         // background
-        for (int i = 0; i < table.height; i++) {
-            for (int j = 0; j < table.width; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 if ((i + j) % 2 == 0) {
                     g.setColor(new java.awt.Color(255, 255, 127));
                 } else {
@@ -95,11 +95,11 @@ public class View extends JPanel {
             }
         }
         g.setColor(java.awt.Color.BLACK);
-        g.drawRect(0, 0, size * table.width - 1, size * table.height - 1);
+        g.drawRect(0, 0, size * 8 - 1, size * 8 - 1);
 
         // pieces
-        for (int i = 0; i < table.height; i++) {
-            for (int j = 0; j < table.width; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 if (table.fields[i][j] != null) {
                     BufferedImage pieceImage = getImageByPiece(table.fields[i][j]);
                     this.g.drawImage(pieceImage, j * size, i * size, size, size, null);

@@ -9,7 +9,7 @@ public class Game {
     List<Table> history;
 
     public Game() {
-        table = new Table(8, 8);
+        table = new Table();
         history = new ArrayList<>();
     }
 
@@ -47,19 +47,8 @@ public class Game {
         Piece pawnToPromote = table.fields[fromRow][fromCol];
         table.move(fromRow, fromCol, toRow, toCol);
         Piece newPiece = null;
-        switch (chosenKind) {
-            case BISHOP:
-                newPiece = new Piece(PieceKind.BISHOP, pawnToPromote.color);
-                break;
-            case KNIGHT:
-                newPiece = new Piece(PieceKind.KNIGHT, pawnToPromote.color);
-                break;
-            case QUEEN:
-                newPiece = new Piece(PieceKind.QUEEN, pawnToPromote.color);
-                break;
-            case ROOK:
-                newPiece = new Piece(PieceKind.ROOK, pawnToPromote.color);
-                break;
+        if (chosenKind != null) {
+            newPiece = new Piece(chosenKind, pawnToPromote.color);
         }
         table.placePiece(newPiece, toRow, toCol);
         controller.refreshView(table);
@@ -67,28 +56,24 @@ public class Game {
     }
 
     /**
-     * This function sets the best move's coordinates
-     * the first two is the starting position,
-     * the second two is the landing position
-     * and returns the best move's state's value
+     * This function returns the state's value - which player has more chance to win
      * note for the usage: it will try to move the turning player's pieces,
      * so we will have to set the 'whoTurns'
      *
-     * @param depth          the recursion's depth
-     * @param referenceTable the function calculates the state value based on this
-     * @param alpha          the caller's best move's value for white
-     * @param beta           the caller's best move's value for black
+     * @param depth the recursion's depth
+     * @param table the function calculates the state value based on this
+     * @param alpha the caller's best move's value for white
+     * @param beta  the caller's best move's value for black
      * @return the best move's value
      */
-    public static double stateValue(int depth, Table referenceTable, double alpha, double beta) {
-        Table copiedTable = referenceTable.copy();
+    public static double stateValue(int depth, Table table, double alpha, double beta) {
         if (depth == 0) {
-            return copiedTable.state();
+            return table.eval();
         }
 
         // initialize the best with a safe value
         double bestMoveValue = 0;
-        switch (copiedTable.whoTurns) {
+        switch (table.whoTurns) {
             case WHITE:
                 bestMoveValue = -100;
                 break;
@@ -98,38 +83,34 @@ public class Game {
         }
 
         // to find the best possible move, we search the whole table for movable pieces
-        for (int i = 0; i < copiedTable.height; i++) {
-            for (int j = 0; j < copiedTable.width; j++) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
 
                 // if it's not our piece, we go to the next one
-                if (copiedTable.whoTurns != copiedTable.getPieceColor(i, j)) {
+                if (table.whoTurns != table.getPieceColor(i, j)) {
                     continue;
                 }
-                List<Position> opportunities = copiedTable.getOpportunities(new Position(i, j));
+                List<Position> opportunities = table.getOpportunities(new Position(i, j));
 
                 // go through all of its opportunities
                 for (Position opp : opportunities) {
 
-                    // save the data for the restoration
-                    Table initialTable = copiedTable.copy();
-//                    controller.view.table = table;
+                    // make a copy so the initial doesn't change
+                    Table copiedTable = table.copy();
 
                     // make a move, and then guess how good the move was
                     copiedTable.move(i, j, opp.row, opp.column);
                     double attemptValue = stateValue(depth - 1, copiedTable, alpha, beta);
 
-                    // make changes back
-                    copiedTable = initialTable;
-
                     // alpha-beta pruning
-                    if (copiedTable.whoTurns == Color.WHITE) {
+                    if (table.whoTurns == Color.WHITE) {
                         bestMoveValue = Math.max(bestMoveValue, attemptValue);
                         if (bestMoveValue >= beta) {
                             return bestMoveValue;
                         }
                         alpha = Math.max(alpha, attemptValue);
                     }
-                    if (copiedTable.whoTurns == Color.BLACK) {
+                    if (table.whoTurns == Color.BLACK) {
                         bestMoveValue = Math.min(bestMoveValue, attemptValue);
                         if (bestMoveValue <= alpha) {
                             return bestMoveValue;
