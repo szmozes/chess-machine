@@ -1,7 +1,7 @@
 package machine;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GameMachineTest {
     Table table;
@@ -22,7 +22,7 @@ public class GameMachineTest {
     //  |6|_|_|_|_|_|_|_|_|
     //  |7|_|_|_|_|_|_|_|_|
 
-    @Before
+    @BeforeEach
     public void setUp() {
         game = new GameAgainstMachine();
         table = game.table;

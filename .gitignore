@@ -6,5 +6,6 @@
 *.jardesc
 /out/
 /bin/
+target
 META-INF/
 demo/

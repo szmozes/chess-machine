@@ -1,13 +1,13 @@
 package machine;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TableTest {
     Table table;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         table = new Table();
     }
@@ -16,6 +16,6 @@ public class TableTest {
     public void testGetPieceColor() {
         Piece test = new Piece(PieceKind.PAWN, Color.WHITE);
         table.placePiece(test, 1, 1);
-        Assert.assertEquals(Color.WHITE, table.getPieceColor(1, 1));
+        Assertions.assertEquals(Color.WHITE, table.getPieceColor(1, 1));
     }
 }
