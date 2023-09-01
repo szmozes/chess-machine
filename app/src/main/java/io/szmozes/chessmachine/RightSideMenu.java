@@ -1,4 +1,4 @@
-package machine;
+package io.szmozes.chessmachine;
 
 import java.awt.*;
 import java.awt.Color;

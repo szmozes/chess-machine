@@ -1,4 +1,4 @@
-package machine;
+package io.szmozes.chessmachine;
 
 enum UIState {
     CHOOSING,

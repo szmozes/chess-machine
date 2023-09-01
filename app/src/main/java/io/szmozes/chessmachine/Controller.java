@@ -1,4 +1,4 @@
-package machine;
+package io.szmozes.chessmachine;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

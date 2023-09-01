@@ -1,4 +1,4 @@
-package machine;
+package io.szmozes.chessmachine;
 
 public class TestWriter {
     static boolean isWriting = true;

@@ -1,4 +1,4 @@
-package machine;
+package io.szmozes.chessmachine;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,7 +11,7 @@ import java.io.IOException;
 public class View extends JPanel {
     Graphics g;
     int size;                   // length of a field in pixels
-    RightSideMenu rightMenu;    // menu at the right side of the chessboard
+    RightSideMenu rightMenu;    // menu on the right side of the chessboard
     Controller controller;
     Table table;
     boolean[][] opportunities;
